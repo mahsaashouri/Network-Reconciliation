@@ -13,7 +13,7 @@ click.2022.12  <- data.frame(lapply(click.2022.12, sub, pattern = "other-.*", re
 click.2022.12 <- click.2022.12 %>%
   mutate('id' = paste(prev, curr, sep = ':'))
 
-## sample 3000 rows
+## sample 300 rows
 set.seed(123)
 click.2022.12.sample <- click.2022.12 %>% slice_sample(n = 300)
 
