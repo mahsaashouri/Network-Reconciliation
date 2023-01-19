@@ -17,4 +17,6 @@ click.2022.12 <- click.2022.12 %>%
 set.seed(123)
 click.2022.12.sample <- click.2022.12 %>% slice_sample(n = 300)
 
+## sample from other files
 
+#click.2021.12.sample <- subset(click.2021.12, click.2021.12$id %in% click.2021.12.sample$id )
