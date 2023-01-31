@@ -16,20 +16,94 @@ data.all <- dplyr::bind_rows(list(A.B = A.B, A.C = A.C, B.A = B.A, B.C = B.C, C.
 data.all <- reshape2::melt(data.all)
 colnames(data.all) <- c('cat', 'series')
 
-## calculate aggregates
-# total series
-Total <- data.all %>%
+## calculate aggregated series
+# total IN 
+TotalIn <- data.all %>%
 group_split(cat) %>%
   map(~.[['series']]) %>%
   reduce(`+`)
-# outer series
+TotalIn <- matrix(TotalIn, nrow = length(TotalIn))
+colnames(TotalIn) <- 'Total.in'
 
+# total OUT 
+TotalOut <- data.all %>%
+  filter(sub("\\..$", "", cat)!='O') %>%
+  group_split(cat) %>%
+  map(~.[['series']]) %>%
+  reduce(`+`)
+TotalOut <- matrix(TotalOut, nrow = length(TotalOut))
+colnames(TotalOut) <- 'Total.out'
+
+# total Outer series (other)
 Outer <- data.all %>%
-  mutate( 'prev.id'= sub(".$", "", cat)) %>%
-  group_split(cat) 
+  filter(sub("\\..$", "", cat)=='O') %>%
+  group_split(cat) %>%
+  map(~.[['series']]) %>%
+  reduce(`+`)
+Outer <- matrix(Outer, nrow = length(Outer))
+colnames(Outer) <- 'Outer'
+
+# IN series
+DataIn1 <- data.all %>%
+  mutate( 'prev.id'= sub("\\..$", "", cat)) %>%
+  filter(prev.id!='O') %>%
+  group_split(prev.id) 
+
+DataIn.O <- data.all %>%
+  filter( sub("\\..$", "", cat)=='O') %>%
+  mutate('prev.id'= sub("*..", "", cat))%>%
+  group_split(prev.id) 
+
+DataIn <- do.call("rbind", do.call(c, list(DataIn1, DataIn.O))) %>%
+group_split(prev.id) 
+
+SumIn <- matrix(NA, nrow = length(TotalIn), ncol = length(DataIn)); NameIn <- c()
+
+for(i in 1:length(DataIn)){
+  name.in <- unique(DataIn[[i]]$prev.id)
+  NameIn <- c(NameIn, name.in)
+  }
+colnames(SumIn) <- paste(NameIn,'in',sep='.')
+
+for (i in 1:length(DataIn)){
+  SumIn[,i] <- DataIn[[i]]%>%
+    group_split(cat) %>%
+    map(~.[['series']]) %>%
+    reduce(`+`)
+}
+
+# OUT series
+DataOut <- data.all %>%
+  filter(sub("\\..$", "", cat)!='O') %>%
+  mutate( 'curr.id'= sub("*..", "", cat)) %>%
+  group_split(curr.id) 
+
+SumOut <- matrix(NA, nrow = length(TotalOut), ncol = length(DataOut)); NameOut <- c()
+
+for(i in 1:length(DataOut)){
+  name.out <- unique(DataOut[[i]]$curr.id)
+  NameOut <- c(NameOut, name.out)
+}
+colnames(SumOut) <- paste(NameOut,'out',sep='.')
+
+for (i in 1:length(DataOut)){
+  SumOut[,i] <- DataOut[[i]]%>%
+    group_split(cat) %>%
+    map(~.[['series']]) %>%
+    reduce(`+`)
+}
+
+# Bottom level series
+
+BottomLevel <- matrix(data.all$series, nrow = nrow(TotalIn))
+colnames(BottomLevel) <- unique(data.all$cat)
+
+## Final aggregated matrix
+
+AggregMat <- bind_cols(TotalIn, TotalOut, Outer, SumIn, SumOut, BottomLevel)
 
 
-#test <- unique(sub(".$", "", unique(data.all$cat) ) )
+
 
 
 
