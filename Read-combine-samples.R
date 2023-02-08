@@ -8,7 +8,7 @@ library(tsibble)
 file_list <- list()
 file_names <- dir()
 file_list <- lapply(file_names, function(x){
-  sampleclick <- read_csv(x)[,-1]
+  sampleclick <- read_csv(x)
   sampleclick$date <- substr(x,1,nchar(x)-4)
   return(sampleclick)})
 ## combine samples
@@ -29,5 +29,11 @@ SampleClick <- SampleClick %>%
 # replacing NA with 0
 SampleClick <- SampleClick %>%
   (function(x) { x[is.na(x)] <- 0; return(x) })
+
+### removing 80% zero series ## total series to work on is 843 time series
+SampleClick <- SampleClick %>%
+  group_by(id) %>%
+  filter(mean(freq == 0) <= 0.8)
+
 
 #write.csv(SampleClick, 'SampleClick.csv')
