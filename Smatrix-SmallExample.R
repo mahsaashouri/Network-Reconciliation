@@ -1,27 +1,5 @@
 
 library(tidyverse)
-## Generating sample series
-A.B <- round(runif(10),2)
-A.C <- round(runif(10),2)
-B.A <- round(runif(10),2)
-B.C <- round(runif(10),2)
-C.A <- round(runif(10),2)
-C.B <- round(runif(10),2)
-O.A <- round(runif(10),2)
-O.B <- round(runif(10),2)
-O.C <- round(runif(10),2)
-
-data.all <- dplyr::bind_rows(list(A.B = A.B, A.C = A.C, B.A = B.A, B.C = B.C, C.A = C.A, C.B = C.B, 
-                                  O.A = O.A, O.B = O.B, O.C = O.C), .id = 'id')
-data.all <- reshape2::melt(data.all)
-colnames(data.all) <- c('cat', 'series')
-
-number.row <- 1+1+ifelse(length((filter(data.all, sub("\\..$", "", data.all$cat)=='O'))$cat)!=0, 1, 0)+
-         ifelse(sum(unique(sub("\\..$", "", data.all$cat)) %in% "O"),length(unique(sub("\\..$", "", data.all$cat)))-1, 
-         length(unique(sub("\\..$", "", data.all$cat)))) + length(unique(sub("*..", "", data.all$cat))) + 
-         length(unique(data.all$cat))
-
-smatrix <- matrix(NA, ncol = length(unique(data.all$cat)), nrow = number.row)
 
 
 
@@ -96,3 +74,5 @@ smatrix <- function(data.network){
 
 ## run the function
 smatrix(data.network = data.all)
+
+
