@@ -73,6 +73,5 @@ smatrix <- function(data.network){
 }
 
 ## run the function
-smatrix(data.network = data.all)
-
+smatrix.net <- smatrix(data.network = data.all)
 
