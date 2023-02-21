@@ -29,7 +29,7 @@ Aggreg.func <- function(data.network){
   
   # total OUT 
   TotalOut <- data.network %>%
-    filter(sub("\\..$", "", cat)!='O') %>%
+    filter(sub("\\..*$", "", cat)!='O') %>%
     group_split(cat) %>%
     map(~.[['series']]) %>%
     reduce(`+`)
@@ -38,7 +38,7 @@ Aggreg.func <- function(data.network){
   
   # total Outer series (other)
   Outer <- data.network %>%
-    filter(sub("\\..$", "", cat)=='O') %>%
+    filter(sub("\\..*$", "", cat)=='O') %>%
     group_split(cat) %>%
     map(~.[['series']]) %>%
     reduce(`+`)
@@ -47,7 +47,7 @@ Aggreg.func <- function(data.network){
   
   # IN series
   DataIn <- data.network %>%
-    mutate('curr.id'= sub("*..", "", cat)) %>%
+    mutate('curr.id'= sub(".*\\.", "", cat)) %>%
     group_split(curr.id) 
   
   SumIn <- matrix(NA, nrow = length(TotalIn), ncol = length(DataIn)); NameIn <- c()
@@ -67,8 +67,8 @@ Aggreg.func <- function(data.network){
   
   # OUT series
   DataOut <- data.network %>%
-    filter(sub("\\..$", "", cat)!='O') %>%
-    mutate( 'prev.id'= sub("\\..$", "", cat)) %>%
+    filter(sub("\\..*$", "", cat)!='O') %>%
+    mutate( 'prev.id'= sub("\\..*$", "", cat)) %>%
     group_split(prev.id) 
   
   SumOut <- matrix(NA, nrow = length(TotalOut), ncol = length(DataOut)); NameOut <- c()
