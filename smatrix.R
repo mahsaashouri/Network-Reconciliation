@@ -5,20 +5,20 @@ library(tidyverse)
 
 ## Generating sample series
 
-A.B <- round(runif(10),2)
-A.C <- round(runif(10),2)
-B.A <- round(runif(10),2)
-B.C <- round(runif(10),2)
-C.A <- round(runif(10),2)
-C.B <- round(runif(10),2)
-O.A <- round(runif(10),2)
-O.B <- round(runif(10),2)
-O.C <- round(runif(10),2)
+#A.B <- round(runif(10),2)
+#A.C <- round(runif(10),2)
+#B.A <- round(runif(10),2)
+#B.C <- round(runif(10),2)
+#C.A <- round(runif(10),2)
+#C.B <- round(runif(10),2)
+#O.A <- round(runif(10),2)
+#O.B <- round(runif(10),2)
+#O.C <- round(runif(10),2)
 
-data.network <- dplyr::bind_rows(list(A.B = A.B, A.C = A.C, B.A = B.A, B.C = B.C, C.A = C.A, C.B = C.B, 
-                                      O.A = O.A, O.B = O.B, O.C = O.C), .id = 'id')
-data.network <- reshape2::melt(data.network)
-colnames(data.network) <- c('cat', 'series')
+#data.network <- dplyr::bind_rows(list(A.B = A.B, A.C = A.C, B.A = B.A, B.C = B.C, C.A = C.A, C.B = C.B, 
+ #                                     O.A = O.A, O.B = O.B, O.C = O.C), .id = 'id')
+#data.network <- reshape2::melt(data.network)
+#colnames(data.network) <- c('cat', 'series')
 
 ## input should be a dataframe with two columns 1- series 2- cat which shows the name of the series 
 ## structure of the names: 'first series.second series' - 'O' shows the 'Outer' series 
@@ -73,5 +73,5 @@ smatrix <- function(data.network){
 }
 
 ## run the function
-smatrix.net <- smatrix(data.network = data.all)
+#smatrix.net <- smatrix(data.network = data.all)
 
