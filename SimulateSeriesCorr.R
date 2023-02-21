@@ -54,13 +54,43 @@ net.name <- c(names.node, names.node.outer)
 ## rename the series
 colnames(ts_data) <- net.name
 
+## generate the aggregated network series and smatrix for the dataset
+
+source('smatrix.R')
+source('ngts.R')
+
+data.network <- reshape2::melt(ts_data)
+data.network <- data.network[,-1]
+colnames(data.network) <- c('cat', 'series')
+smatrix.net <- smatrix(data.network = data.network)
+ngts.net <- ts(Aggreg.func(data.network), frequency = 12, start = c(2010, 1))
 
 
+## base forecasts using ARIMA
 
+## training and test sets
+# Splitting data into training and test sets
+net.train <- window(ngts.net, end = c(2018, 12))
+net.test <- window(ngts.net, start = c(2019, 1))
+h <- 12 ## number of forecast points
+fc <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
+for(i in seq(NCOL(net.train)))
+{
+  fc[,i] <- forecast(auto.arima(net.train[,i]), h = h)$mean
+}
+colnames(fc) <- colnames(net.test)
 
+## computing reconciliation matrix
+lambda <- diag(rowSums(smatrix.net))
 
+rec.adj.lambda <- as.matrix(smatrix.net%*%solve(t(smatrix.net)%*%solve(lambda)%*%smatrix.net)%*%t(smatrix.net)%*%solve(lambda))
 
-
+fc.rec <- matrix(NA, nrow = 12, ncol = ncol(net.test))
+for(i in 1:nrow(fc)){
+  f.1 <- matrix(as.numeric(fc[i,]), ncol = 1, nrow = ncol(fc))
+  fc.rec [i,] <- rec.adj.lambda %*% f.1
+}
+colnames(fc.rec ) <- colnames(net.test)
 
 
 
