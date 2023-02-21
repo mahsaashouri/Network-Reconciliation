@@ -47,13 +47,13 @@ Aggreg.func <- function(data.network){
   
   # IN series
   DataIn <- data.network %>%
-    mutate('curr.id'= sub(".*\\.", "", cat)) %>%
+    mutate('curr.id'= factor(sub(".*\\.", "", cat), level = unique(sub(".*\\.", "", cat)))) %>%
     group_split(curr.id) 
   
   SumIn <- matrix(NA, nrow = length(TotalIn), ncol = length(DataIn)); NameIn <- c()
   
   for(i in 1:length(DataIn)){
-    name.in <- unique(DataIn[[i]]$curr.id)
+    name.in <- unique(as.character(DataIn[[i]]$curr.id))
     NameIn <- c(NameIn, name.in)
   }
   colnames(SumIn) <- paste(NameIn,'in',sep='.')
@@ -68,13 +68,13 @@ Aggreg.func <- function(data.network){
   # OUT series
   DataOut <- data.network %>%
     filter(sub("\\..*$", "", cat)!='O') %>%
-    mutate( 'prev.id'= sub("\\..*$", "", cat)) %>%
+    mutate( 'prev.id'= factor(sub("\\..*$", "", cat), level = unique(sub("\\..*$", "", cat)))) %>%
     group_split(prev.id) 
   
   SumOut <- matrix(NA, nrow = length(TotalOut), ncol = length(DataOut)); NameOut <- c()
   
   for(i in 1:length(DataOut)){
-    name.out <- unique(DataOut[[i]]$prev.id)
+    name.out <- unique(as.character(DataOut[[i]]$prev.id))
     NameOut <- c(NameOut, name.out)
   }
   colnames(SumOut) <- paste(NameOut,'out',sep='.')
