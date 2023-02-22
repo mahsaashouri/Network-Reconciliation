@@ -16,14 +16,14 @@ SampleClick <- rbindlist(file_list)
 
 ## add up repeated rows
 SampleClick <- SampleClick %>%
-  group_by(prev, curr, type, id, date) %>%
+  group_by( id, date) %>%
   summarise(freq = sum(freq))
 
 ## fill incomplete monthly series ## total number of series 843- length of each series: 62
 
 SampleClick <- SampleClick %>% 
   mutate(date = yearmonth((parse_date_time(date, "ym")))) %>%
-  group_by(prev, curr, type, id) %>% 
+  group_by(id) %>% 
   complete(date = rep(min(date) + 0:61), fill = list(amount = 0))
 
 # replacing NA with 0
