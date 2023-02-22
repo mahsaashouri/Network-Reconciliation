@@ -19,7 +19,7 @@ SampleClick <- SampleClick %>%
   group_by(prev, curr, type, id, date) %>%
   summarise(freq = sum(freq))
 
-## fill incomplete monthly series ## total number of seriesL 305 - length of each series: 62
+## fill incomplete monthly series ## total number of series 843- length of each series: 62
 
 SampleClick <- SampleClick %>% 
   mutate(date = yearmonth((parse_date_time(date, "ym")))) %>%
