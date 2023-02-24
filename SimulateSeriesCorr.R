@@ -125,4 +125,9 @@ for(i in 1:nrow(fc.arima)){
 colnames(fc.mint.shrink.arima) <- colnames(net.test)
 
 
+## plot some results
+plot(c(net.test[,'A2.A11']), type = 'l')
+lines(fc.arima[,'A2.A11'], col = 'green')
+lines(fc.arima.rec[,'A2.A11'], col = 'blue')
+lines(c(fc.mint.shrink.arima[,'A2.A11']), col = 'red')
 
