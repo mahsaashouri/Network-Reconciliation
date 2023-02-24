@@ -14,17 +14,23 @@ file_list <- lapply(file_names, function(x){
 ## combine samples
 SampleClick <- rbindlist(file_list)
 
+
+
 ## add up repeated rows
 SampleClick <- SampleClick %>%
-  group_by( id, date) %>%
+  group_by(id, date) %>%
   summarise(freq = sum(freq))
 
 ## fill incomplete monthly series ## total number of series 843- length of each series: 62
 
 SampleClick <- SampleClick %>% 
-  mutate(date = yearmonth((parse_date_time(date, "ym")))) %>%
+  mutate(date = yearmonth((parse_date_time(date, "ym")))) 
+
+date.sample <-  rep(min(SampleClick$date) + 0:61)
+
+SampleClick <- SampleClick %>%
   group_by(id) %>% 
-  complete(date = rep(min(date) + 0:61), fill = list(amount = 0))
+  complete(date = date.sample, fill = list(amount = 0))
 
 # replacing NA with 0
 SampleClick <- SampleClick %>%
