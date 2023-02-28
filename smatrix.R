@@ -53,15 +53,15 @@ smatrix <- function(data.network){
   
   cat.un <-  unique(data.network$cat)
   # IN series
-  no.in.series <- ifelse(sum(unique(char.before) %in% "O"),length(unique(char.before))-1, 
-                         length(unique(char.before)))
+  no.in.series <- length(unique(char.after))
   for(i in 1:no.in.series){
     s.in <- unique(char.after)
     smatrix.network[h+i,] <- ifelse(sub(".*\\.", "", cat.un) %in% s.in[i], 1, 0)
   }
   
   # OUT series
-  no.out.series <- length(unique(char.after))
+  no.out.series <- ifelse(sum(unique(char.before) %in% "O"),length(unique(char.before))-1, 
+                         length(unique(char.before)))
   for(i in 1:no.out.series){
     s.out <- unique(char.before)[!unique(char.before) %in% "O"]
     smatrix.network[h+no.in.series+i,] <- ifelse(sub("\\..*$", "", cat.un) %in% s.out[i], 1, 0)

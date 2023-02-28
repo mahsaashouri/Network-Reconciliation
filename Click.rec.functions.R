@@ -1,5 +1,6 @@
 
 library(tidyverse)
+library(forecast)
 
 data.network.all <- read_csv('SampleClick.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
@@ -36,15 +37,15 @@ smatrix <- function(data.network){
   
   cat.un <-  unique(data.network$cat)
   # IN series
-  no.in.series <- ifelse(sum(unique(char.before) %in% "other"),length(unique(char.before))-1, 
-                         length(unique(char.before)))
+  no.in.series <- length(unique(char.after))
   for(i in 1:no.in.series){
     s.in <- unique(char.after)
     smatrix.network[h+i,] <- ifelse(sub(".*:", "", cat.un) %in% s.in[i], 1, 0)
   }
   
   # OUT series
-  no.out.series <- length(unique(char.after))
+  no.out.series <- ifelse(sum(unique(char.before) %in% "other"),length(unique(char.before))-1, 
+                         length(unique(char.before)))
   for(i in 1:no.out.series){
     s.out <- unique(char.before)[!unique(char.before) %in% "other"]
     smatrix.network[h+no.in.series+i,] <- ifelse(sub(":.*", "", cat.un) %in% s.out[i], 1, 0)
@@ -165,7 +166,7 @@ lambda <- diag(rowSums(smatrix.net))
 
 rec.adj.lambda <- as.matrix(smatrix.net%*%solve(t(smatrix.net)%*%solve(lambda)%*%smatrix.net)%*%t(smatrix.net)%*%solve(lambda))
 
-fc.arima.rec <- matrix(NA, nrow = 12, ncol = ncol(net.test))
+fc.arima.rec <- matrix(NA, nrow = h, ncol = ncol(net.test))
 for(i in 1:nrow(fc.arima)){
   f.1 <- matrix(as.numeric(fc.arima[i,]), ncol = 1, nrow = ncol(fc.arima))
   fc.arima.rec [i,] <- rec.adj.lambda %*% f.1
@@ -199,6 +200,13 @@ for(i in 1:nrow(fc.arima)){
   fc.mint.shrink.arima [i,] <- SP %*% f.1
 }
 colnames(fc.mint.shrink.arima) <- colnames(net.test)
+
+
+## plot some results
+plot(c(net.test[,'Battle_of_the_Bismarck_Sea.in']), type = 'l')
+lines(c(fc.arima[,'Battle_of_the_Bismarck_Sea.in']), col = 'green')
+lines(c(fc.arima.rec[,'Battle_of_the_Bismarck_Sea.in']), col = 'blue')
+lines(c(fc.mint.shrink.arima[,'Battle_of_the_Bismarck_Sea.in']), col = 'red')
 
 
 
