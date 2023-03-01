@@ -1,8 +1,9 @@
 
 ## simulate correlated AR(1) series 
-
+library(tidyverse)
 library(forecast)
 library(MASS)
+library(Matrix)
 
 
 
@@ -62,8 +63,8 @@ source('ngts.R')
 data.network <- reshape2::melt(ts_data)
 data.network <- data.network[,-1]
 colnames(data.network) <- c('cat', 'series')
-smatrix.net <- smatrix(data.network = data.network)
-ngts.net <- ts(Aggreg.func(data.network), frequency = 12, start = c(2010, 1))
+smatrix.net <- as.matrix(smatrix(data.network = data.network))
+ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2010, 1))
 
 
 ## base forecasts using ARIMA

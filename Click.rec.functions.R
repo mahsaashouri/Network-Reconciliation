@@ -1,6 +1,7 @@
 
 library(tidyverse)
 library(forecast)
+library(Matrix)
 
 data.network.all <- read_csv('SampleClick.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
@@ -65,7 +66,7 @@ Aggreg.func <- function(data.network){
     group_split(cat) %>%
     map(~.[['series']]) %>%
     reduce(`+`)
-  TotalIn <- matrix(TotalIn, nrow = length(TotalIn))
+  TotalIn <- Matrix(TotalIn, nrow = length(TotalIn), sparse = TRUE)
   colnames(TotalIn) <- 'Total.in'
   
   # total OUT 
@@ -74,7 +75,7 @@ Aggreg.func <- function(data.network){
     group_split(cat) %>%
     map(~.[['series']]) %>%
     reduce(`+`)
-  TotalOut <- matrix(TotalOut, nrow = length(TotalOut))
+  TotalOut <- Matrix(TotalOut, nrow = length(TotalOut), sparse = TRUE)
   colnames(TotalOut) <- 'Total.out'
   
   # total Outer series (other)
@@ -83,7 +84,7 @@ Aggreg.func <- function(data.network){
     group_split(cat) %>%
     map(~.[['series']]) %>%
     reduce(`+`)
-  Outer <- matrix(Outer, nrow = length(Outer))
+  Outer <- Matrix(Outer, nrow = length(Outer), sparse = TRUE)
   colnames(Outer) <- 'Outer'
   
   # IN series
@@ -91,7 +92,7 @@ Aggreg.func <- function(data.network){
     mutate('curr.id'= factor(sub(".*:", "", cat), level = unique(sub(".*:", "", cat)))) %>%
     group_split(curr.id) 
   
-  SumIn <- matrix(NA, nrow = length(TotalIn), ncol = length(DataIn)); NameIn <- c()
+  SumIn <- Matrix(0, nrow = length(TotalIn), ncol = length(DataIn), sparse = TRUE); NameIn <- c()
   
   for(i in 1:length(DataIn)){
     name.in <- unique(as.character(DataIn[[i]]$curr.id))
@@ -112,7 +113,7 @@ Aggreg.func <- function(data.network){
     mutate( 'prev.id'= factor(sub(":.*", "", cat), level = unique(sub(":.*", "", cat)))) %>%
     group_split(prev.id) 
   
-  SumOut <- matrix(NA, nrow = length(TotalOut), ncol = length(DataOut)); NameOut <- c()
+  SumOut <- Matrix(0, nrow = length(TotalOut), ncol = length(DataOut), sparse = TRUE); NameOut <- c()
   
   for(i in 1:length(DataOut)){
     name.out <- unique(as.character(DataOut[[i]]$prev.id))
@@ -128,12 +129,12 @@ Aggreg.func <- function(data.network){
   }
   
   # Bottom level series
-  BottomLevel <- matrix(data.network$series, nrow = nrow(TotalIn))
+  BottomLevel <- Matrix(as.numeric(data.network$series), nrow = nrow(TotalIn), sparse = TRUE)
   colnames(BottomLevel) <- unique(data.network$cat)
   
   ## Final aggregated matrix
   
-  AggregMat <- bind_cols(TotalIn, TotalOut, Outer, SumIn, SumOut, BottomLevel)
+  AggregMat <- cbind(TotalIn, TotalOut, Outer, SumIn, SumOut, BottomLevel)
   
   return(AggregMat)
 }
@@ -141,7 +142,8 @@ Aggreg.func <- function(data.network){
 
 
 smatrix.net <- smatrix(data.network = data.network)
-ngts.net <- ts(Aggreg.func(data.network), frequency = 12, start = c(2017, 11))
+ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2017, 11))
+
 
 
 ## base forecasts using ARIMA
