@@ -18,10 +18,10 @@ smatrix <- function(data.network){
     ifelse(sum(unique(char.before) %in% "other"),length(unique(char.before))-1, length(unique(char.before))) + 
     length(unique(char.after)) + length(unique(data.network$cat))
   
-  ## emty matrix for smatrix
-  smatrix.network <- matrix(NA, ncol = length(unique(data.network$cat)), nrow = number.row)
+  ## empty matrix for smatrix
+  smatrix.network <- Matrix(0, ncol = length(unique(data.network$cat)), nrow = number.row, sparse = TRUE)  
   # total IN 
-  smatrix.network[1,] <- rep(1, ncol(smatrix.network))
+  smatrix.network[1,] <- 1
   # total OUT
   smatrix.network[2,] <- c(rep(1, ncol(smatrix.network)-length(unique(filter(data.network, char.before == 'other')$cat))), 
                            rep(0, length(unique(filter(data.network, char.before == 'other')$cat))))
