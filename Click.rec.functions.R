@@ -7,6 +7,18 @@ data.network.all <- read_csv('SampleClick.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
 colnames(data.network) <- c('cat', 'series')
 
+## Smooth the series
+library(purrr)
+# split data by category and convert to time series
+ts_list <- split(data.network, data.network$cat) %>%
+  map(~ ts(.x$series, frequency = 12)) %>%
+  map(~ round(tsclean(.x), 0))
+
+# combine time series into a single dataframe
+data.network <- ts_list %>%
+  imap(~ tibble(cat = .y, series = .x)) %>%
+  bind_rows()
+
 ## summing matrix
 smatrix <- function(data.network){
   
@@ -145,14 +157,13 @@ smatrix.net <- smatrix(data.network = data.network)
 ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2017, 11))
 
 
-
 ## base forecasts using ARIMA
 
 ## training and test sets
 # Splitting data into training and test sets
-net.train <- window(ngts.net, end = c(2021, 12))
-net.test <- window(ngts.net, start = c(2022, 1))
-h <- 12 ## number of forecast points
+net.train <- window(ngts.net, end = c(2022, 6))
+net.test <- window(ngts.net, start = c(2022, 7))
+h <- 6 ## number of forecast points
 fc.arima <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
 train.error <- matrix(NA, nrow = nrow(net.train), ncol = ncol(net.train))
 for(i in seq(NCOL(net.train))){
