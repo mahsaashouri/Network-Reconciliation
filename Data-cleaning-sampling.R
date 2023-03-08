@@ -3,7 +3,7 @@ library(tidyverse)
 ## reading data
 library(data.table)
 
-## get 1000 sample from 2022-12
+## get 3000 sample from 2022-12
 
 click.2022.12<-as.data.frame(fread("clickstream-enwiki-2022-12.tsv"))
 ## specify column names
@@ -17,13 +17,13 @@ click.2022.12 <- click.2022.12 %>%
   mutate('id' = paste(prev, curr, sep = ':'))
 
 ## sample 1000 rows
-set.seed(123)
-click202212 <- click.2022.12 %>% slice_sample(n = 1000)
+set.seed(12)
+click202212 <- click.2022.12 %>% slice_sample(n = 3000)
 
-
+write.csv(click202212, '2022-12.csv')
 ## get the same sample from other dataframes
 
-#click202212 <- read_csv('2022-12.csv')[,-1]
+click202212 <- read_csv('2022-12.csv')[,-1]
 
 ## list of datasets to read
 DatasetNames <- c("clickstream-enwiki-2017-11.tsv", "clickstream-enwiki-2017-12.tsv", "clickstream-enwiki-2018-01.tsv",

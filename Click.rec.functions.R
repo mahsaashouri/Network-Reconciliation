@@ -3,21 +3,21 @@ library(tidyverse)
 library(forecast)
 library(Matrix)
 
-data.network.all <- read_csv('SampleClick.csv')[,-1]
+data.network.all <- read_csv('SampleClick3000.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
 colnames(data.network) <- c('cat', 'series')
 
 ## Smooth the series
 library(purrr)
 # split data by category and convert to time series
-ts_list <- split(data.network, data.network$cat) %>%
-  map(~ ts(.x$series, frequency = 12)) %>%
-  map(~ round(tsclean(.x), 0))
+#ts_list <- split(data.network, data.network$cat) %>%
+#  map(~ ts(.x$series, frequency = 12)) %>%
+#  map(~ round(tsclean(.x), 0))
 
 # combine time series into a single dataframe
-data.network <- ts_list %>%
-  imap(~ tibble(cat = .y, series = .x)) %>%
-  bind_rows()
+#data.network <- ts_list %>%
+#  imap(~ tibble(cat = .y, series = .x)) %>%
+#  bind_rows()
 
 ## summing matrix
 smatrix <- function(data.network){
@@ -156,14 +156,14 @@ Aggreg.func <- function(data.network){
 smatrix.net <- smatrix(data.network = data.network)
 ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2017, 11))
 
-
+#plot(as.matrix(ngts.net)[,1], type = 'l')
 ## base forecasts using ARIMA
 
 ## training and test sets
 # Splitting data into training and test sets
-net.train <- window(ngts.net, end = c(2022, 6))
-net.test <- window(ngts.net, start = c(2022, 7))
-h <- 6 ## number of forecast points
+net.train <- window(ngts.net, end = c(2021, 12))
+net.test <- window(ngts.net, start = c(2022, 1))
+h <- 12 ## number of forecast points
 fc.arima <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
 train.error <- matrix(NA, nrow = nrow(net.train), ncol = ncol(net.train))
 for(i in seq(NCOL(net.train))){
@@ -221,7 +221,7 @@ merged_arima <- rbind(cbind(reshape2::melt(net.test), data = 'test.set'), cbind(
                     cbind(reshape2::melt(fc.mint.shrink.arima), data = 'mint.shrink.arima'))
 
 merged_arima%>%
-  filter(Var2 == "Total.in") %>%
+  filter(Var2 == "Mleccha.in") %>%
   ggplot(aes(x = Var1, y = value, colour = data)) +
   geom_line() +
   xlab("Horizon") +
@@ -233,9 +233,9 @@ merged_arima%>%
 
 ## training and test sets
 # Splitting data into training and test sets
-net.train <- window(ngts.net, end = c(2022, 6))
-net.test <- window(ngts.net, start = c(2022, 7))
-h <- 6 ## number of forecast points
+net.train <- window(ngts.net, end = c(2021, 12))
+net.test <- window(ngts.net, start = c(2022, 1))
+h <- 12 ## number of forecast points
 fc.ETS <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
 train.error <- matrix(NA, nrow = nrow(net.train), ncol = ncol(net.train))
 for(i in seq(NCOL(net.train))){
@@ -293,7 +293,7 @@ merged_ETS <- rbind(cbind(reshape2::melt(net.test), data = 'test.set'), cbind(re
                     cbind(reshape2::melt(fc.mint.shrink.ETS), data = 'mint.shrink.ETS'))
 
 merged_ETS%>%
- filter(Var2 == "Innale.out") %>%
+ filter(Var2 == "Total.in") %>%
   ggplot(aes(x = Var1, y = value, colour = data)) +
   geom_line() +
   xlab("Horizon") +
