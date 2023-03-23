@@ -1,4 +1,6 @@
 SampleClick.csv/
+names.all.prev.curr.csv
+
 # History files
 .Rhistory
 .Rapp.history
