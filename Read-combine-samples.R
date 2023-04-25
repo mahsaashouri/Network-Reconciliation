@@ -6,7 +6,8 @@ library(tidyverse)
 library(tsibble)
 ## read all the sample data - add the date column (same as each file name) - combine all the samples from each month as one file
 file_list <- list()
-file_names <- dir()
+#file_names <- dir()
+file_names <- list.files(pattern="*.csv")
 file_list <- lapply(file_names, function(x){
   sampleclick <- read_csv(x)
   sampleclick$date <- substr(x,1,nchar(x)-4)
@@ -26,11 +27,16 @@ SampleClick <- SampleClick %>%
 SampleClick <- SampleClick %>% 
   mutate(date = yearmonth((parse_date_time(date, "ym")))) 
 
-date.sample <-  rep(min(SampleClick$date) + 0:61)
-
+#date.sample <-  rep(min(SampleClick$date) + 0:61)
+#SampleClick <- SampleClick %>%
+#  group_by(id) %>% 
+#  complete(date = date.sample, fill = list(amount = 0))
+mindate <- min(SampleClick$date)
+maxdate <- max(SampleClick$date)
 SampleClick <- SampleClick %>%
   group_by(id) %>% 
-  complete(date = date.sample, fill = list(amount = 0))
+  complete(date = seq(mindate, maxdate, by = 1), fill = list(amount = 0))
+
 
 # replacing NA with 0
 SampleClick <- SampleClick %>%

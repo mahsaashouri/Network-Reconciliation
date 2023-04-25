@@ -1,6 +1,5 @@
 
 library(tidyverse)
-## reading data
 library(data.table)
 library(tm)
 library(topicmodels)
@@ -54,8 +53,12 @@ for(i in 1:length(DatasetNames)){
 name.prev.curr <- unique(c(unlist(prev), unlist(curr)))
 write_csv(as.data.frame(name.prev.curr), 'names.all.prev.curr.csv')
 
-## add extra character at the begining and end of each string
+## add extra character at the beginning and end of each string
+names.all.prev.curr <- read_csv("names.all.prev.curr.csv")
+name.prev.curr <- names.all.prev.curr$name.prev.curr
 name.prev.curr[-length(name.prev.curr)] <- paste0(paste0('the', name.prev.curr[-length(name.prev.curr)]), 'A')
+# remove all non graphical characters
+name.prev.curr <- str_replace_all(name.prev.curr,"[^[:graph:]]", " ") 
 
 # Create a corpus from the page titles - curr pages
 df <- data.frame(doc_id = c(1:length(unique(name.prev.curr))), text = as.character(unique(name.prev.curr)), stringsAsFactors = FALSE)
