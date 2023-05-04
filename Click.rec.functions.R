@@ -3,7 +3,7 @@ library(tidyverse)
 library(forecast)
 library(Matrix)
 
-data.network.all <- read_csv('SampleClick3000.csv')[,-1]
+data.network.all <- read_csv('SampleClick263570.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
 colnames(data.network) <- c('cat', 'series')
 
