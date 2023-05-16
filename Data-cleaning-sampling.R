@@ -18,7 +18,7 @@ click.2023.02 <- click.2023.02 %>%
 
 ## sample 1000 rows
 set.seed(12)
-click202302 <- click.2023.02 %>% slice_sample(n = 310000)
+click202302 <- click.2023.02 %>% slice_sample(n = 35000)
 
 write.csv(click202302 , '2023-02.csv')
 ## get the same sample from other dataframes
@@ -26,7 +26,17 @@ write.csv(click202302 , '2023-02.csv')
 click202302  <- read_csv('2023-02.csv')[,-1]
 
 ## list of datasets to read
-DatasetNames <- c( "clickstream-enwiki-2020-06.tsv", "clickstream-enwiki-2020-07.tsv", 
+DatasetNames <- c("clickstream-enwiki-2017-11.tsv", "clickstream-enwiki-2017-12.tsv", "clickstream-enwiki-2018-01.tsv",
+                  "clickstream-enwiki-2018-02.tsv", "clickstream-enwiki-2018-03.tsv", "clickstream-enwiki-2018-04.tsv",
+                  "clickstream-enwiki-2018-05.tsv", "clickstream-enwiki-2018-06.tsv", "clickstream-enwiki-2018-07.tsv",
+                  "clickstream-enwiki-2018-08.tsv", "clickstream-enwiki-2018-09.tsv", "clickstream-enwiki-2018-10.tsv",
+                  "clickstream-enwiki-2018-11.tsv", "clickstream-enwiki-2018-12.tsv", "clickstream-enwiki-2019-01.tsv",
+                  "clickstream-enwiki-2019-02.tsv", "clickstream-enwiki-2019-03.tsv", "clickstream-enwiki-2019-04.tsv",
+                  "clickstream-enwiki-2019-05.tsv", "clickstream-enwiki-2019-06.tsv", "clickstream-enwiki-2019-07.tsv",
+                  "clickstream-enwiki-2019-08.tsv", "clickstream-enwiki-2019-09.tsv", "clickstream-enwiki-2019-10.tsv",
+                  "clickstream-enwiki-2019-11.tsv", "clickstream-enwiki-2019-12.tsv", "clickstream-enwiki-2020-01.tsv",
+                  "clickstream-enwiki-2020-02.tsv", "clickstream-enwiki-2020-03.tsv", "clickstream-enwiki-2020-04.tsv",
+                  "clickstream-enwiki-2020-05.tsv", "clickstream-enwiki-2020-06.tsv", "clickstream-enwiki-2020-07.tsv", 
                   "clickstream-enwiki-2020-08.tsv", "clickstream-enwiki-2020-09.tsv", "clickstream-enwiki-2020-10.tsv",
                   "clickstream-enwiki-2020-11.tsv", "clickstream-enwiki-2020-12.tsv", "clickstream-enwiki-2021-01.tsv",
                   "clickstream-enwiki-2021-02.tsv", "clickstream-enwiki-2021-03.tsv", "clickstream-enwiki-2021-04.tsv", 
