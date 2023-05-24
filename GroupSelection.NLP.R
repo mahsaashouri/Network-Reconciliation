@@ -4,6 +4,10 @@ library(data.table)
 
 
 Out_lg <- as.data.frame(fread('out_110022_names.all.prev.curr.utf.csv_en_core_web_lg.csv'))
+#Out_lg <- Out_lg[-c(1:2),]
+## set other group as other
+Out_lg[1,'V3'] <- 'other'
+
 click.2023.02 <- as.data.frame(fread("clickstream-enwiki-2023-02.tsv"))
 ## specify column names
 colnames(click.2023.02) <- c('prev', 'curr', 'type', 'freq')
@@ -42,10 +46,13 @@ setkey(Out_lg, V1)
 # Perform a left join and update NLP_Category
 click.2023.02[Out_lg, NLP_Cat_curr := i.V3, on = c(curr = "V1")]
 
-## Select only product - product categories
-Sample.product.2023.02 <- click.2023.02[click.2023.02$NLP_Cat_prev == "['PRODUCT']" & click.2023.02$NLP_Cat_curr == "['PRODUCT']"]
+## Select only other - product categories and product - product
+Sample.product.2023.02.1 <- click.2023.02[click.2023.02$NLP_Cat_prev == "other" & click.2023.02$NLP_Cat_curr == "['PRODUCT']"]
+Sample.product.2023.02.2 <- click.2023.02[click.2023.02$NLP_Cat_prev == "['PRODUCT']" & click.2023.02$NLP_Cat_curr == "['PRODUCT']"]
+Sample.product.2023.02 <- bind_rows(Sample.product.2023.02.1, Sample.product.2023.02.2)
+length(unique(Sample.product.2023.02$id)) ## 41495
 
-length(unique(Sample.product.2023.02$id)) ## 12194
+write_csv(Sample.product.2023.02, 'Sample.product.2023.02.csv')
 
 
 ## test

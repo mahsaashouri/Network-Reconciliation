@@ -24,7 +24,7 @@ click.2023.02 <- click.2023.02 %>%
 ## get the same sample from other dataframes
 ## Use product sample - not randomly sampled series
 click202302  <- read_csv('Sample.product.2023.02.csv')#[,-1]
-click202302 <- click202302[,-c(6:7)]
+
 
 ## list of datasets to read
 DatasetNames <- c("clickstream-enwiki-2017-11.tsv", "clickstream-enwiki-2017-12.tsv", "clickstream-enwiki-2018-01.tsv",
