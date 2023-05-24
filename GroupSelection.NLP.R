@@ -52,7 +52,7 @@ Sample.product.2023.02.2 <- click.2023.02[click.2023.02$NLP_Cat_prev == "['PRODU
 Sample.product.2023.02 <- bind_rows(Sample.product.2023.02.1, Sample.product.2023.02.2)
 length(unique(Sample.product.2023.02$id)) ## 41495
 
-write_csv(Sample.product.2023.02, 'Sample.product.2023.02.csv')
+write_csv(Sample.product.2023.02[,c(-6,-7)], 'Sample.product.2023.02.csv')
 
 
 ## test

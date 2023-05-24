@@ -20,51 +20,53 @@ library(purrr)
 #  bind_rows()
 
 ## summing matrix
-smatrix <- function(data.network){
-  
-  ## series before and after '.' which shows inner and outer series
+
+smatrix <- function(data.network) {
+  # Preprocess data to avoid redundant computations
   char.before <- sub("::.*", "", data.network$cat)
   char.after <- sub(".*::", "", data.network$cat)
+  unique_cat <- unique(data.network$cat)
+  other_cat <- unique(filter(data.network, char.before == 'other')$cat)
   
-  ## number of rows in smatrix.network
-  number.row <- 1 + 1 + ifelse(length((filter(data.network, char.before =='other'))$cat)!=0, 1, 0) +
-    ifelse(sum(unique(char.before) %in% "other"),length(unique(char.before))-1, length(unique(char.before))) + 
+  # Calculate required dimensions and preallocate memory
+  number.row <- 1 + 1 + ifelse(length((filter(data.network, char.before == 'other'))$cat) != 0, 1, 0) +
+    ifelse(sum(unique(char.before) %in% "other"), length(unique(char.before)) - 1, length(unique(char.before))) +
     length(unique(char.after)) + length(unique(data.network$cat))
+  smatrix.network <- Matrix(0, ncol = length(unique_cat), nrow = number.row, sparse = TRUE)
   
-  ## empty matrix for smatrix
-  smatrix.network <- Matrix(0, ncol = length(unique(data.network$cat)), nrow = number.row, sparse = TRUE)  
-  # total IN 
-  smatrix.network[1,] <- 1
+  # total IN
+  smatrix.network[1, ] <- 1
+  
   # total OUT
-  smatrix.network[2,] <- c(rep(1, ncol(smatrix.network)-length(unique(filter(data.network, char.before == 'other')$cat))), 
-                           rep(0, length(unique(filter(data.network, char.before == 'other')$cat))))
+  smatrix.network[2, ] <- c(rep(1, ncol(smatrix.network) - length(other_cat)),
+                            rep(0, length(other_cat)))
+  
   # total Outer series (other)
-  if(sum(unique(char.before) %in% "other") == 1){
+  if (sum(unique(char.before) %in% "other") == 1) {
     h <- 3
-    smatrix.network[h,] <- c(rep(0, ncol(smatrix.network)-length(unique(filter(data.network, char.before == 'other')$cat))), 
-                             rep(1, length(unique(filter(data.network, char.before == 'other')$cat))))  
-  }
-  else{
+    smatrix.network[h, ] <- c(rep(0, ncol(smatrix.network) - length(other_cat)),
+                              rep(1, length(other_cat)))
+  } else {
     h <- 0
   }
   
-  cat.un <-  unique(data.network$cat)
   # IN series
   no.in.series <- length(unique(char.after))
-  for(i in 1:no.in.series){
-    s.in <- unique(char.after)
-    smatrix.network[h+i,] <- ifelse(sub(".*::", "", cat.un) %in% s.in[i], 1, 0)
-  }
+  s.in <- unique(char.after)
+  smatrix.network[(h + 1):(h + no.in.series), ] <- matrix(as.numeric(sub(".*::", "", unique_cat) %in% s.in),
+                                                          nrow = no.in.series, ncol = length(unique_cat), byrow = TRUE)
   
   # OUT series
-  no.out.series <- ifelse(sum(unique(char.before) %in% "other"),length(unique(char.before))-1, 
-                         length(unique(char.before)))
-  for(i in 1:no.out.series){
-    s.out <- unique(char.before)[!unique(char.before) %in% "other"]
-    smatrix.network[h+no.in.series+i,] <- ifelse(sub("::.*", "", cat.un) %in% s.out[i], 1, 0)
-  }
+  no.out.series <- ifelse(sum(unique(char.before) %in% "other"), length(unique(char.before)) - 1,
+                          length(unique(char.before)))
+  s.out <- unique(char.before)[!unique(char.before) %in% "other"]
+  smatrix.network[(h + no.in.series + 1):(h + no.in.series + no.out.series), ] <-
+    matrix(as.numeric(sub("::.*", "", unique_cat) %in% s.out), nrow = no.out.series,
+           ncol = length(unique_cat), byrow = TRUE)
+  
   # Bottom level series
-  smatrix.network[(h+no.in.series+no.out.series+1):number.row,] <- diag(1, length(unique(data.network$cat)))
+  smatrix.network[(h + no.in.series + no.out.series + 1):number.row, ] <-
+    diag(1, length(unique_cat))
   
   return(smatrix.network)
 }
