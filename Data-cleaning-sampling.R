@@ -17,13 +17,14 @@ click.2023.02 <- click.2023.02 %>%
   mutate('id' = paste(prev, curr, sep = '::'))
 
 ## sample 1000 rows
-set.seed(12)
-click202302 <- click.2023.02 %>% slice_sample(n = 35000)
+#set.seed(12)
+#click202302 <- click.2023.02 %>% slice_sample(n = 35000)
 
-write.csv(click202302 , '2023-02.csv')
+#write.csv(click202302 , '2023-02.csv')
 ## get the same sample from other dataframes
-
-click202302  <- read_csv('2023-02.csv')[,-1]
+## Use product sample - not randomly sampled series
+click202302  <- read_csv('Sample.product.2023.02.csv')#[,-1]
+click202302 <- click202302[,-c(6:7)]
 
 ## list of datasets to read
 DatasetNames <- c("clickstream-enwiki-2017-11.tsv", "clickstream-enwiki-2017-12.tsv", "clickstream-enwiki-2018-01.tsv",
