@@ -169,6 +169,16 @@ Aggreg.func <- function(data.network){
 smatrix.net <- smatrix(data.network = data.network)
 ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2017, 11))
 
+## plot the series 
+ngts.net.melt <- reshape2::melt(ngts.net)
+ngts.net.melt%>%
+  filter(Var2 == "Total.in") %>%
+  ggplot(aes(x = Var1, y = value)) +
+  geom_line() +
+  xlab("Horizon") +
+  ylab("Count") +
+  theme_bw()
+
 #plot(as.matrix(ngts.net)[,1], type = 'l')
 ## base forecasts using ARIMA
 
@@ -247,6 +257,7 @@ merged_arima%>%
   theme_bw()
 
 
+  
 ## base forecasts using ETS
 
 ## training and test sets
