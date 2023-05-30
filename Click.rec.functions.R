@@ -167,7 +167,7 @@ Aggreg.func <- function(data.network){
 
 
 smatrix.net <- smatrix(data.network = data.network)
-ngts.net.test2 <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2017, 11))
+ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2017, 11))
 
 #plot(as.matrix(ngts.net)[,1], type = 'l')
 ## base forecasts using ARIMA
@@ -188,9 +188,14 @@ colnames(fc.arima) <- colnames(net.test)
 colnames(train.error) <- colnames(net.train)
 
 ## computing reconciliation matrix - simplest type
-lambda <- diag(rowSums(smatrix.net))
-
-rec.adj.lambda <- as.matrix(smatrix.net%*%solve(t(smatrix.net)%*%solve(lambda)%*%smatrix.net)%*%t(smatrix.net)%*%solve(lambda))
+lambda_vector <- Matrix::rowSums(smatrix.net)
+lambda <- sparseMatrix(i = 1:length(lambda_vector),
+             j = 1:length(lambda_vector),
+             x = lambda_vector,
+             dims = c(length(lambda_vector), length(lambda_vector)))
+Inv_lambda <- solve(lambda)
+Inv_smatrix.net <- solve(t(smatrix.net)%*%Inv_lambda%*%smatrix.net)
+rec.adj.lambda <- (smatrix.net%*%Inv_smatrix.net%*%t(smatrix.net)%*%Inv_lambda)
 
 fc.arima.rec <- matrix(NA, nrow = h, ncol = ncol(net.test))
 for(i in 1:nrow(fc.arima)){
