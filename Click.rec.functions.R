@@ -86,7 +86,8 @@ smatrix <- function(data.network) {
 
 ## aggregation function
 Aggreg.func <- function(data.network){
-  
+  char.before <- sub("::.*", "", data.network$cat)
+  char.after <- sub(".*::", "", data.network$cat)
   # total IN 
   TotalIn <- data.network %>%
     group_split(cat) %>%
@@ -97,7 +98,7 @@ Aggreg.func <- function(data.network){
   
   # total OUT 
   TotalOut <- data.network %>%
-    filter(sub("::.*", "", cat)!='other') %>%
+    filter(char.before!='other') %>%
     group_split(cat) %>%
     map(~.[['series']]) %>%
     reduce(`+`)
@@ -106,7 +107,7 @@ Aggreg.func <- function(data.network){
   
   # total Outer series (other)
   Outer <- data.network %>%
-    filter(sub("::.*", "", cat)=='other') %>%
+    filter(char.before =='other') %>%
     group_split(cat) %>%
     map(~.[['series']]) %>%
     reduce(`+`)
@@ -115,7 +116,7 @@ Aggreg.func <- function(data.network){
   
   # IN series
   DataIn <- data.network %>%
-    mutate('curr.id'= factor(sub(".*::", "", cat), level = unique(sub(".*::", "", cat)))) %>%
+    mutate('curr.id'= factor(char.after, level = unique(char.after))) %>%
     group_split(curr.id) 
   
   SumIn <- Matrix(0, nrow = length(TotalIn), ncol = length(DataIn), sparse = TRUE); NameIn <- c()
@@ -132,10 +133,9 @@ Aggreg.func <- function(data.network){
       map(~.[['series']]) %>%
       reduce(`+`)
   }
-  
   # OUT series
   DataOut <- data.network %>%
-    filter(sub("::.*", "", cat)!='other') %>%
+    filter(char.before!='other') %>%
     mutate( 'prev.id'= factor(sub("::.*", "", cat), level = unique(sub("::.*", "", cat)))) %>%
     group_split(prev.id) 
   
@@ -153,7 +153,6 @@ Aggreg.func <- function(data.network){
       map(~.[['series']]) %>%
       reduce(`+`)
   }
-  
   # Bottom level series
   BottomLevel <- Matrix(as.numeric(data.network$series), nrow = nrow(TotalIn), sparse = TRUE)
   colnames(BottomLevel) <- unique(data.network$cat)
@@ -168,7 +167,7 @@ Aggreg.func <- function(data.network){
 
 
 smatrix.net <- smatrix(data.network = data.network)
-ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2017, 11))
+ngts.net.test2 <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2017, 11))
 
 #plot(as.matrix(ngts.net)[,1], type = 'l')
 ## base forecasts using ARIMA
