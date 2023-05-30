@@ -16,7 +16,6 @@ file_list <- lapply(file_names, function(x){
 SampleClick <- rbindlist(file_list)
 
 
-
 ## add up repeated rows
 SampleClick <- SampleClick %>%
   group_by(id, date) %>%
@@ -45,7 +44,7 @@ SampleClick <- SampleClick %>%
 ### removing 80% zero series ## total series to work on is 843 time series
 SampleClick <- SampleClick %>%
   group_by(id) %>%
-  filter(mean(freq == 0) <= 0.8)
+  filter(mean(freq == 0) <= 0.7)
 
 
-write.csv(SampleClick, 'SampleClick29918.csv')
+write.csv(SampleClick, 'SampleClickProduct.csv')
