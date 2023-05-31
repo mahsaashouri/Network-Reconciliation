@@ -3,7 +3,7 @@ library(tidyverse)
 library(forecast)
 library(Matrix)
 
-data.network.all <- read_csv('SampleClickProduct.csv')[,-1]
+data.network.all <- read_csv('SampleClickWorkOfArt.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
 colnames(data.network) <- c('cat', 'series')
 
@@ -172,7 +172,7 @@ ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2
 ## plot the series 
 ngts.net.melt <- reshape2::melt(ngts.net)
 ngts.net.melt%>%
-  filter(Var2 == "Total.in") %>%
+  filter(Var2 == "Albert_Von_Tilzer.in") %>%
   ggplot(aes(x = Var1, y = value)) +
   geom_line() +
   xlab("Horizon") +

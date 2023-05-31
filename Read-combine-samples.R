@@ -47,4 +47,4 @@ SampleClick <- SampleClick %>%
   filter(mean(freq == 0) <= 0.7)
 
 
-write.csv(SampleClick, 'SampleClickProduct.csv')
+write.csv(SampleClick, 'SampleClickWorkOfArt.csv')
