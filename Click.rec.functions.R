@@ -3,7 +3,7 @@ library(tidyverse)
 library(forecast)
 library(Matrix)
 
-data.network.all <- read_csv('SampleClickWorkOfArt.csv')[,-1]
+data.network.all <- read_csv('SampleClickProduct.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
 colnames(data.network) <- c('cat', 'series')
 
@@ -184,15 +184,63 @@ ngts.net.melt%>%
 
 ## training and test sets
 # Splitting data into training and test sets
-net.train <- window(ngts.net, end = c(2021, 12))
-net.test <- window(ngts.net, start = c(2022, 1))
+net.train <- window(ngts.net, end = c(2022, 2))
+net.test <- window(ngts.net, start = c(2022, 3))
 h <- 12 ## number of forecast points
-fc.arima <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
-train.error <- matrix(NA, nrow = nrow(net.train), ncol = ncol(net.train))
-for(i in seq(NCOL(net.train))){
-  fc <- forecast(auto.arima(net.train[,i]), h = h)
+## scale data
+scale_data <- function(train, test, feature_range = c(0, 1)) {
+  scaled_train <- data.frame(matrix(NA, nrow = nrow(train), ncol = ncol(train)))
+  scaled_test <- data.frame(matrix(NA, nrow = nrow(test), ncol = ncol(test)))
+  
+  for (i in 1:ncol(train)) {
+    x <- train[, i]
+    fr_min <- feature_range[1]
+    fr_max <- feature_range[2]
+    
+    std_train <- (x - min(x)) / (max(x) - min(x))
+    std_test <- (test[, i] - min(x)) / (max(x) - min(x))
+    
+    scaled_train[, i] <- std_train * (fr_max - fr_min) + fr_min
+    scaled_test[, i] <- std_test * (fr_max - fr_min) + fr_min
+  }
+  
+  return(list(scaled_train = scaled_train, scaled_test = scaled_test, scaler = apply(train, 2, function(x) c(min = min(x), max = max(x)))))
+}
+
+# Apply scaling to net.gts dataset
+Scaled <- scale_data(net.train, net.test, c(-1, 1))
+
+# Access the scaled data
+y_train <- Scaled$scaled_train
+y_test <- Scaled$scaled_test
+
+# Function to inverse-transform scaled data
+invert_scaling <- function(scaled, scaler, feature_range = c(0, 1)) {
+  mins <- feature_range[1]
+  maxs <- feature_range[2]
+  
+  inverted_dfs <- data.frame(matrix(NA, nrow = nrow(scaled), ncol = ncol(scaled)))
+  
+  for (i in 1:ncol(scaled)) {
+    min <- scaler["min", i]
+    max <- scaler["max", i]
+    X <- (scaled[, i] - mins) / (maxs - mins)
+    rawValues <- X * (max - min) + min
+    inverted_dfs[, i] <- rawValues
+  }
+  
+  return(inverted_dfs)
+}
+
+# Apply inverse scaling to the scaled data - just to check
+#inverted_data <- invert_scaling(Scaled$scaled_train, Scaled$scaler, c(-1, 1))
+
+fc.arima <- matrix(NA, nrow = nrow(y_train), ncol = ncol(y_train))
+train.error <- matrix(NA, nrow = nrow(y_train), ncol = ncol(y_train))
+for(i in seq(NCOL(y_train))){
+  fc <- forecast(auto.arima(y_train[,i]), h = h)
   fc.arima[,i] <- fc$mean
-  train.error[,i] <- fc$fitted - net.train[,i]
+  train.error[,i] <- fc$fitted - y_train[,i]
 }
 colnames(fc.arima) <- colnames(net.test)
 colnames(train.error) <- colnames(net.train)
@@ -204,6 +252,11 @@ lambda <- sparseMatrix(i = 1:length(lambda_vector),
              x = lambda_vector,
              dims = c(length(lambda_vector), length(lambda_vector)))
 Inv_lambda <- solve(lambda)
+test <- t(smatrix.net)%*%Inv_lambda
+test2 <- test%*%smatrix.net
+test3 <- itersolve(as.matrix(test2))
+
+
 Inv_smatrix.net <- solve(t(smatrix.net)%*%Inv_lambda%*%smatrix.net)
 rec.adj.lambda <- (smatrix.net%*%Inv_smatrix.net%*%t(smatrix.net)%*%Inv_lambda)
 
