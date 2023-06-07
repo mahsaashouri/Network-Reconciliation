@@ -172,7 +172,7 @@ ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2
 ## plot the series 
 ngts.net.melt <- reshape2::melt(ngts.net)
 ngts.net.melt%>%
-  filter(Var2 == "Albert_Von_Tilzer.in") %>%
+  filter(Var2 == "Total.in") %>%
   ggplot(aes(x = Var1, y = value)) +
   geom_line() +
   xlab("Horizon") +
@@ -209,7 +209,8 @@ scale_data <- function(train, test, feature_range = c(0, 1)) {
 
 # Apply scaling to net.gts dataset
 Scaled <- scale_data(net.train, net.test, c(-1, 1))
-
+train.all  <- Scaled$scaled_train
+test.all <- Scaled$scaled_test
 # Access the scaled data
 y_train <- Scaled$scaled_train
 y_test <- Scaled$scaled_test
@@ -235,15 +236,16 @@ invert_scaling <- function(scaled, scaler, feature_range = c(0, 1)) {
 # Apply inverse scaling to the scaled data - just to check
 #inverted_data <- invert_scaling(Scaled$scaled_train, Scaled$scaler, c(-1, 1))
 
-fc.arima <- matrix(NA, nrow = nrow(y_train), ncol = ncol(y_train))
-train.error <- matrix(NA, nrow = nrow(y_train), ncol = ncol(y_train))
+fc.arima <- matrix(NA, nrow = nrow(y_test), ncol = ncol(y_test))
+train.fit <- matrix(NA, nrow = nrow(y_train), ncol = ncol(y_train))
 for(i in seq(NCOL(y_train))){
-  fc <- forecast(auto.arima(y_train[,i]), h = h)
+  fc <- forecast(auto.arima(train.all[,i], D = 1, d = 1), h = h)
   fc.arima[,i] <- fc$mean
-  train.error[,i] <- fc$fitted - y_train[,i]
+  train.fit[,i] <- fc$fitted #- y_train[,i]
 }
 colnames(fc.arima) <- colnames(net.test)
-colnames(train.error) <- colnames(net.train)
+colnames(train.fit) <- colnames(net.train)
+#inverted_data.test <- invert_scaling(fc.arima, Scaled$scaler, c(-1, 1))
 
 ## computing reconciliation matrix - simplest type
 lambda_vector <- Matrix::rowSums(smatrix.net)
@@ -252,11 +254,9 @@ lambda <- sparseMatrix(i = 1:length(lambda_vector),
              x = lambda_vector,
              dims = c(length(lambda_vector), length(lambda_vector)))
 Inv_lambda <- solve(lambda)
-test <- t(smatrix.net)%*%Inv_lambda
-test2 <- test%*%smatrix.net
-test3 <- itersolve(as.matrix(test2))
-
-
+#test <- t(smatrix.net)%*%Inv_lambda
+#test2 <- test%*%smatrix.net
+#test3 <- solve(as.matrix(test2))
 Inv_smatrix.net <- solve(t(smatrix.net)%*%Inv_lambda%*%smatrix.net)
 rec.adj.lambda <- (smatrix.net%*%Inv_smatrix.net%*%t(smatrix.net)%*%Inv_lambda)
 
