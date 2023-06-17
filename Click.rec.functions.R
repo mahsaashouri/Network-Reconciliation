@@ -4,6 +4,8 @@ library(forecast)
 library(Matrix)
 source('smatrix.R')
 source('ngts.R')
+source('Scale_data.R')
+source('Invert_scale.R')
 
 data.network.all <- read_csv('SampleClickProduct.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
@@ -42,25 +44,6 @@ ngts.net.melt%>%
 net.train <- window(ngts.net, end = c(2022, 2))
 net.test <- window(ngts.net, start = c(2022, 3))
 h <- 12 ## number of forecast points
-## scale data
-scale_data <- function(train, test, feature_range = c(0, 1)) {
-  scaled_train <- data.frame(matrix(NA, nrow = nrow(train), ncol = ncol(train)))
-  scaled_test <- data.frame(matrix(NA, nrow = nrow(test), ncol = ncol(test)))
-  
-  for (i in 1:ncol(train)) {
-    x <- train[, i]
-    fr_min <- feature_range[1]
-    fr_max <- feature_range[2]
-    
-    std_train <- (x - min(x)) / (max(x) - min(x))
-    std_test <- (test[, i] - min(x)) / (max(x) - min(x))
-    
-    scaled_train[, i] <- std_train * (fr_max - fr_min) + fr_min
-    scaled_test[, i] <- std_test * (fr_max - fr_min) + fr_min
-  }
-  
-  return(list(scaled_train = scaled_train, scaled_test = scaled_test, scaler = apply(train, 2, function(x) c(min = min(x), max = max(x)))))
-}
 
 # Apply scaling to net.gts dataset
 Scaled <- scale_data(net.train, net.test, c(-1, 1))
@@ -70,23 +53,6 @@ test.all <- Scaled$scaled_test
 y_train <- Scaled$scaled_train
 y_test <- Scaled$scaled_test
 
-# Function to inverse-transform scaled data
-invert_scaling <- function(scaled, scaler, feature_range = c(0, 1)) {
-  mins <- feature_range[1]
-  maxs <- feature_range[2]
-  
-  inverted_dfs <- data.frame(matrix(NA, nrow = nrow(scaled), ncol = ncol(scaled)))
-  
-  for (i in 1:ncol(scaled)) {
-    min <- scaler["min", i]
-    max <- scaler["max", i]
-    X <- (scaled[, i] - mins) / (maxs - mins)
-    rawValues <- X * (max - min) + min
-    inverted_dfs[, i] <- rawValues
-  }
-  
-  return(inverted_dfs)
-}
 
 # Apply inverse scaling to the scaled data - just to check
 #inverted_data <- invert_scaling(Scaled$scaled_train, Scaled$scaler, c(-1, 1))
