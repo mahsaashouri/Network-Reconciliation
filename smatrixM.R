@@ -1,4 +1,4 @@
-## Summing matrix Sparse using Matrix package
+## Summing matrix - Sparse using SparseM package
 smatrix <- function(data.network) {
   # Preprocess data to avoid redundant computations
   char.before <- sub("::.*", "", data.network$cat)
@@ -9,15 +9,11 @@ smatrix <- function(data.network) {
   # Calculate required dimensions and preallocate memory
   number.row <- 1 + 1 + ifelse(length((filter(data.network, char.before == 'other'))$cat) != 0, 1, 0) +
     ifelse(sum(unique(char.before) %in% "other"), length(unique(char.before)) - 1, length(unique(char.before))) +
-    length(unique(char.after)) + length(unique(data.network$cat))
+    length(unique(char.after)) + length(unique_cat)
   #smatrix.network <- Matrix(0, ncol = length(unique_cat), nrow = number.row, sparse = TRUE)
-  smatrix.network <- sparseMatrix(
-    i = numeric(0),
-    j = numeric(0),
-    x = numeric(0),
-    dims = c(number.row, length(unique(data.network$cat)))
-  )
-  
+  smatrix.network<-  as.matrix.csr(new("matrix.coo", ra =  as.integer(rep(0, length(unique_cat))), ja =  as.integer(rep(1L, length(unique_cat))), 
+                    ia =  as.integer(rep(1L, length(unique_cat))),
+                    dimension = as.integer(c(number.row, length(unique_cat)))))
   # total IN
   smatrix.network[1, ] <- 1
   
