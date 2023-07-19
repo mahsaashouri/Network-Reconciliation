@@ -11,7 +11,8 @@ olsfc.pwfc <- function(x, h, breakpoints = c(5, 10, 15, 20), maxlag = 0, nolag =
   
   modeldata_olsfc <- data.frame(
     x = as.numeric(x),
-    trend = seq_along(x),
+    trend1 = seq_along(x),
+    trend2 = (seq_along(x))^(-1),
     season = factor(cycle(x))
   )
   
@@ -28,7 +29,7 @@ olsfc.pwfc <- function(x, h, breakpoints = c(5, 10, 15, 20), maxlag = 0, nolag =
   }
   
   form_pwfc <- "x ~ segment + trend + season"
-  form_olsfc <- "x ~ trend + season"
+  form_olsfc <- "x ~ trend1 + trend2 + season"
   if (length(nolag) == 0)
     nolag <- seq(maxlag)
   for (i in nolag) {
@@ -54,6 +55,8 @@ olsfc.pwfc <- function(x, h, breakpoints = c(5, 10, 15, 20), maxlag = 0, nolag =
   )
   
   trend <- length(x) + seq(h)
+  trend1 <- length(x) + seq(h)
+  trend2 <- (length(x) + seq(h))^(-1)
   season_pwfc <- factor(cycle(fc_pwfc))
   season_olsfc <- factor(cycle(fc_olsfc))
   
@@ -67,7 +70,7 @@ olsfc.pwfc <- function(x, h, breakpoints = c(5, 10, 15, 20), maxlag = 0, nolag =
     }
     
     newdata_pwfc <- data.frame(segment = segment, trend = trend[i], season = season_pwfc[i])
-    newdata_olsfc <- data.frame(trend = trend[i], season = season_olsfc[i])
+    newdata_olsfc <- data.frame(trend1 = trend1[i], trend2 = trend2[i], season = season_olsfc[i])
     
     for (k in seq_along(lagnames_pwfc))
       newdata_pwfc[[lagnames_pwfc[k]]] <- tail(x, k)[1]
@@ -85,7 +88,8 @@ olsfc.pwfc <- function(x, h, breakpoints = c(5, 10, 15, 20), maxlag = 0, nolag =
     newdata_pwfc[['segment']] <- segment
     newdata_pwfc[['trend']] <- trend[i + 1]
     newdata_pwfc[['season']] <- season_pwfc[i + 1]
-    newdata_olsfc[['trend']] <- trend[i + 1]
+    newdata_olsfc[['trend1']] <- trend1[i + 1]
+    newdata_olsfc[['trend2']] <- trend2[i + 1]
     newdata_olsfc[['season']] <- season_olsfc[i + 1]
   }
   
