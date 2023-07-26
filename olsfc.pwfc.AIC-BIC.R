@@ -72,15 +72,11 @@ olsfc.pwfc <- function(x, h, breakpoints = c(5, 10, 15, 20), maxlag = 0, nolag =
     stop("Invalid criterion. Please choose either 'AIC' or 'BIC'.")
   }
   
-  #aic_pwfc <- AIC(fit_pwfc)
-  #aic_olsfc <- AIC(fit_olsfc)
-  
-  fc_pwfc <- ts(numeric(h),
-                frequency = frequency(x),
-                start = tsp(x)[2] + 1 / frequency(x)
-  )
-  
   if ("segment" %in% colnames(selected_data)) {
+    fc_pwfc <- ts(numeric(h),
+                  frequency = frequency(x),
+                  start = tsp(x)[2] + 1 / frequency(x)
+    )
     trend <- length(x) + seq(h)
     season_pwfc <- factor(cycle(fc_pwfc))
     
