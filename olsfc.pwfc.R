@@ -2,12 +2,16 @@ olsfc.pwfc <- function(x, h, breakpoints = c(5, 10, 15, 20), maxlag = 0, nolag =
   n <- length(x)
   num_segments <- length(breakpoints) + 1
   
+  # Identify the segment for each data point
+  segments <- findInterval(seq_along(x), c(0, breakpoints, n+1))
+  
   modeldata_pwfc <- data.frame(
     x = as.numeric(x),
-    segment = factor(findInterval(seq_along(x), c(0, breakpoints, n))),
+    segment = factor(segments),
     trend = seq_along(x),
     season = factor(cycle(x))
   )
+  
   
   modeldata_olsfc <- data.frame(
     x = as.numeric(x),
