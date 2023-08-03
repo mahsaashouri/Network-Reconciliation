@@ -5,7 +5,7 @@ library(data.table)
 
 ## get 31000 sample from 2022-12
 
-click.2023.02<-as.data.frame(fread("Sample.DATE.lg.2023.02.csv"))
+click.2023.02<-as.data.frame(fread("Sample.PERSON.lg.2023.02.csv"))
 ## specify column names
 colnames(click.2023.02) <- c('prev', 'curr', 'type', 'freq')
 
