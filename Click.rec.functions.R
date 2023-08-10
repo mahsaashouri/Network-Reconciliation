@@ -50,9 +50,9 @@ h <- 12
 
 ## ARIMA
 fc.arima <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
-train.fit <- matrix(NA, nrow = nrow(net.train)-1, ncol = ncol(net.train))
+train.fit <- matrix(NA, nrow = nrow(net.train), ncol = ncol(net.train))
 for(i in seq(NCOL(net.train))){
-  c <- forecast(auto.arima(net.train[,i], D = 1, d = 1), h = h)
+  fc <- forecast(auto.arima(net.train[,i], D = 1, d = 1), h = h)
   fc.arima[,i] <- fc$mean
   train.fit[,i] <- fc$fitted 
 }
