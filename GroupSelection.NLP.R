@@ -47,12 +47,12 @@ setkey(Out_lg, V1)
 click.2023.02[Out_lg, NLP_Cat_curr := i.V3, on = c(curr = "V1")]
 
 ## Select only other - product categories and product - product
-Sample.product.2023.02.1 <- click.2023.02[click.2023.02$NLP_Cat_prev == "other" & click.2023.02$NLP_Cat_curr == "['EVENT']"]
-Sample.product.2023.02.2 <- click.2023.02[click.2023.02$NLP_Cat_prev == "['EVENT']" & click.2023.02$NLP_Cat_curr == "['EVENT']"]
+Sample.product.2023.02.1 <- click.2023.02[click.2023.02$NLP_Cat_prev == "other" & click.2023.02$NLP_Cat_curr == "['GPE']"]
+Sample.product.2023.02.2 <- click.2023.02[click.2023.02$NLP_Cat_prev == "['GPE']" & click.2023.02$NLP_Cat_curr == "['GPE']"]
 Sample.product.2023.02 <- bind_rows(Sample.product.2023.02.1, Sample.product.2023.02.2)
 length(unique(Sample.product.2023.02$id)) 
 
-write_csv(Sample.product.2023.02[,-c(6,7)], 'Sample.PERSON.lg.2023.02.csv')
+write_csv(Sample.product.2023.02[,-c(6,7)], '2023-02.csv')
 
 
 ## test
