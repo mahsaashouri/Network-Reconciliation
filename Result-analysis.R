@@ -149,7 +149,7 @@ rmse_results <- fc.all %>%
   summarise(rmse = sqrt(mean(error^2)))
 
 filtered_data <- fc.all %>%
-  filter(Level == 'Outer')
+  filter(Series == 'X1975_Cricket_World_Cup_squads.in')
 
 ggplot(filtered_data, aes(x = id, y = fc, color = Method, linetype = Rec)) +
   geom_line() +
