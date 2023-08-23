@@ -3,22 +3,22 @@
 library(dplyr)
 library(purrr)
 library(ggplot2)
-
+library(readr)
 ## actual
-net.test <- read.csv('net.test.csv', header = TRUE)[,-1]
-net.train <- read.csv('net.train.csv', header = TRUE)[,-1]
+net.test <- read_csv('net.test.csv')[,-1]
+net.train <- read_csv('net.train.csv')[,-1]
 
 ## res train
-res.train.arima <- read.csv('res.train.arima.csv', header = TRUE)[,-1]
-res.train.ets <- read.csv('res.train.ets.csv', header = TRUE)[,-1]
-res.train.ols <- read.csv('res.train.ols.csv', header = TRUE)[,-1]
-res.train.naive <- read.csv('res.train.naive.csv', header = TRUE)[,-1]
+res.train.arima <- read_csv('res.train.arima.csv')[,-1]
+res.train.ets <- read_csv('res.train.ets.csv')[,-1]
+res.train.ols <- read_csv('res.train.ols.csv')[,-1]
+res.train.naive <- read_csv('res.train.naive.csv')[,-1]
 
 ## base fc
-arima.unrec <- read.csv('fc.arima.unrec.csv', header = TRUE)[,-1]
-ets.unrec <- read.csv('fc.ets.unrec.csv', header = TRUE)[,-1] 
-ols.unrec <- read.csv('fc.ols.unrec.csv', header = TRUE)[,-1] 
-naive.unrec <- read.csv('fc.naive.unrec.csv', header = TRUE)[,-1] 
+arima.unrec <- read_csv('fc.arima.unrec.csv')[,-1]
+ets.unrec <- read_csv('fc.ets.unrec.csv')[,-1] 
+ols.unrec <- read_csv('fc.ols.unrec.csv')[,-1] 
+naive.unrec <- read_csv('fc.naive.unrec.csv')[,-1] 
 ## base res
 res.arima.unrec <- net.test - arima.unrec
 res.ets.unrec <- net.test - ets.unrec
@@ -31,10 +31,10 @@ fc.train.ols.unrec <- res.train.ols + res.train.ols
 fc.train.naive.unrec <- res.train.naive + res.train.naive
 
 ## rec fc - null weight
-CG.null.arima <- read.csv('fc.rec.CG.null.arima.csv', header = TRUE)[,-1]
-CG.null.ets <- read.csv('fc.rec.CG.null.ets.csv', header = TRUE)[,-1]
-CG.null.ols <- read.csv('fc.rec.CG.null.ols.csv', header = TRUE)[,-1]
-CG.null.naive <- read.csv('fc.rec.CG.null.naive.csv', header = TRUE)[,-1]
+CG.null.arima <- read_csv('fc.rec.CG.null.arima.csv')[,-1]
+CG.null.ets <- read_csv('fc.rec.CG.null.ets.csv')[,-1]
+CG.null.ols <- read_csv('fc.rec.CG.null.ols.csv')[,-1]
+CG.null.naive <- read_csv('fc.rec.CG.null.naive.csv')[,-1]
 ## rec fc - null weight - res
 res.CG.null.arima <- net.test - CG.null.arima
 res.CG.null.ets <- net.test - CG.null.ets
@@ -42,10 +42,10 @@ res.CG.null.ols <- net.test - CG.null.ols
 res.CG.null.naive <- net.test - CG.null.naive
 
 ## rec fc - shrink weight
-rec.CG.shrink.arima <- read.csv('fc.rec.CG.shrink.arima.csv', header = TRUE)[,-1]
-rec.CG.shrink.ets <- read.csv('fc.rec.CG.shrink.ets.csv', header = TRUE)[,-1]
-rec.CG.shrink.ols <- read.csv('fc.rec.CG.shrink.ols.csv', header = TRUE)[,-1]
-rec.CG.shrink.naive <- read.csv('fc.rec.CG.shrink.naive.csv', header = TRUE)[,-1]
+rec.CG.shrink.arima <- read_csv('fc.rec.CG.shrink.arima.csv')[,-1]
+rec.CG.shrink.ets <- read_csv('fc.rec.CG.shrink.ets.csv')[,-1]
+rec.CG.shrink.ols <- read_csv('fc.rec.CG.shrink.ols.csv')[,-1]
+rec.CG.shrink.naive <- read_csv('fc.rec.CG.shrink.naive.csv')[,-1]
 ## rec fc - shrink weight - res
 res.rec.CG.shrink.arima <- net.test - rec.CG.shrink.arima
 res.rec.CG.shrink.ets <- net.test - rec.CG.shrink.ets
@@ -149,7 +149,7 @@ rmse_results <- fc.all %>%
   summarise(rmse = sqrt(mean(error^2)))
 
 filtered_data <- fc.all %>%
-  filter(Series == 'X1975_Cricket_World_Cup_squads.in')
+  filter(Series == 'other::World_Thinking_Day')
 
 ggplot(filtered_data, aes(x = id, y = fc, color = Method, linetype = Rec)) +
   geom_line() +
