@@ -10,7 +10,7 @@ smatrix <- function(data.network) {
   number.row <- 1 + 1 + ifelse(length((filter(data.network, char.before == 'other'))$cat) != 0, 1, 0) +
     ifelse(sum(unique(char.before) %in% "other"), length(unique(char.before)) - 1, length(unique(char.before))) +
     length(unique(char.after)) + length(unique(data.network$cat))
-  
+  #smatrix.network <- Matrix(0, ncol = length(unique_cat), nrow = number.row, sparse = TRUE)
   smatrix.network <- sparseMatrix(
     i = numeric(0),
     j = numeric(0),
@@ -39,6 +39,7 @@ smatrix <- function(data.network) {
   s.in <- unique(char.after)
   unique_cat_after <-sub(".*::", "", unique_cat)
   for (i in 1:no.in.series) {
+    #smatrix.network[h + i, ] <- ifelse(unique_cat_after %in% s.in[i], 1, 0)
     smatrix.network[h + i, ] <- as.integer(unique_cat_after %in% s.in[i])
   }
   
@@ -48,9 +49,11 @@ smatrix <- function(data.network) {
   s.out <- unique(char.before)[!unique(char.before) %in% "other"]
   unique_cat_before <- sub("::.*", "", unique_cat)
   for (i in 1:no.out.series) {
+    #smatrix.network[h + no.in.series + i, ] <- ifelse(unique_cat_before %in% s.out[i], 1, 0)
     smatrix.network[h + no.in.series + i, ] <- as.integer(unique_cat_before %in% s.out[i])
   }
   # Bottom level series
+  #smatrix.network[(h + no.in.series + no.out.series + 1):number.row, ] <- Diagonal(1, length(unique_cat))
   smatrix.network[(h + no.in.series + no.out.series + 1):number.row, ] <- sparseMatrix(i = 1:length(unique_cat),
                                                                                        j = 1:length(unique_cat),
                                                                                        x = 1,

@@ -50,12 +50,12 @@ CHOL <- function(fcasts, S, weights, allow.changes = FALSE) {
   }
   jmat <- methods::new("matrix.csr", ra = rep(1L, nbts), ja = seq((nagg + 1L), nts),
                        ia = 1L:(nbts + 1L), dimension = as.integer(c(nbts, nts)))
-  rhs.l <- utmat %*% fcasts
+  rhs.l <- utmat %*% t(fcasts)
   if (is.null(weights)) {
     lhs.l <- utmat %*% t(utmat)
     lhs.l <- (t(lhs.l) + lhs.l)/2
     lin.sol <- backsolve(chol(lhs.l), rhs.l)
-    p1 <- jmat %*% fcasts - (jmat %*% t(utmat) %*% lin.sol)
+    p1 <- jmat %*% t(fcasts) - (jmat %*% t(utmat) %*% lin.sol)
   } else {
     lhs.l <- utmat %*% weights %*% t(utmat)
     lhs.l <- (t(lhs.l) + lhs.l)/2
