@@ -1,5 +1,5 @@
 ## aggregation function
-Aggreg.func <- function(data.network){
+Aggreg.func.v2 <- function(data.network){
   char.before <- sub("::.*", "", data.network$cat)
   char.after <- sub(".*::", "", data.network$cat)
   # total IN 

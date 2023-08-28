@@ -1,5 +1,5 @@
 ## Summing matrix Sparse using Matrix package
-smatrix <- function(data.network) {
+smatrix.v2 <- function(data.network) {
   # Preprocess data to avoid redundant computations
   char.before <- sub("::.*", "", data.network$cat)
   char.after <- sub(".*::", "", data.network$cat)
@@ -84,7 +84,7 @@ smatrix <- function(data.network) {
     }
   }
   # Bottom level series
-  smatrix.network[(h + no.in.series + no.out.series + 1):number.row, ] <- sparseMatrix(i = 1:length(unique_cat),
+  smatrix.network[(h + nrow.in + nrow.out + 1):number.row, ] <- sparseMatrix(i = 1:length(unique_cat),
                                                                                        j = 1:length(unique_cat),
                                                                                        x = 1,
                                                                                        dims = c(length(unique_cat), length(unique_cat)))
