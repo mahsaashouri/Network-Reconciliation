@@ -4,15 +4,55 @@ library(forecast)
 library(Matrix)
 library(hts)
 library(SparseM)
-source('smatrix.R')
-source('ngts.R')
+source('smatrix-V2.R')
+source('ngts-V2.R')
 source('CG.shrink.R')
 source('olsfc.pwfc.AIC-BIC.R')
 
 
-data.network.all <- read_csv('SampleClickProduct.csv')[,-1]
+data.network.all <- read_csv('SampleEVENT.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
 colnames(data.network) <- c('cat', 'series')
+
+## only choose the connected network
+
+library(igraph)
+
+# Create a graph from your dataset
+split_names <- strsplit(unique(data.network$cat), "::")
+before_parts <- sapply(split_names, "[[", 1)
+after_parts <- sapply(split_names, "[[", 2)
+
+data <- cbind.data.frame('before' = c(before_parts), 'after' = c(after_parts))
+
+graph <- graph_from_data_frame(data, directed = TRUE)
+
+components <- components(graph)
+largest_component <- which.max(components$csize)
+largest_vertices <- which(components$membership == largest_component)
+largest_subgraph <- induced_subgraph(graph, vids = largest_vertices)
+
+largest_subgraph_data <- as.data.frame(get.edgelist(largest_subgraph))
+largest_subgraph_data_id <- largest_subgraph_data %>%
+  mutate('id' = paste(largest_subgraph_data$V1, largest_subgraph_data$V2, sep = '::'))
+
+## plot the graph
+#ColMap = rep("orange", vcount(largest_subgraph))
+#ColMap[grep("^SA", V(largest_subgraph)$name)] = "red"
+#plot(largest_subgraph,
+#     edge.label.cex = 1,
+#     edge.arrow.size=.2,
+#     vertex.color=ColMap,
+#     vertex.size=4, 
+#     vertex.frame.color="orange",
+#     vertex.label.color="black", 
+#     vertex.label.cex=0.8,
+#     vertex.label.dist=c(rep(1.2,5), rep(2.2,17)),
+#     vertex.label.degree = c(rep(-pi/2, 5), pi, rep(-0.1,8), rep(0.1,8)),
+#     margin=-.2,
+#     vertex.shape='circle')
+
+click.data.network.all <- subset(data.network, data.network$cat %in% largest_subgraph_data_id$id )
 
 ## Smooth the series
 #library(purrr)
@@ -26,8 +66,8 @@ colnames(data.network) <- c('cat', 'series')
 #  imap(~ tibble(cat = .y, series = .x)) %>%
 #  bind_rows()
 
-smatrix.net <- smatrix(data.network = data.network)
-ngts.net <- ts(as.matrix(Aggreg.func(data.network)), frequency = 12, start = c(2017, 11))
+smatrix.net <- smatrix(data.network = click.data.network.all)
+ngts.net <- ts(as.matrix(Aggreg.func(click.data.network.all)), frequency = 12, start = c(2017, 11))
 
 ## plot the series 
 #ngts.net.melt <- reshape2::melt(ngts.net)
