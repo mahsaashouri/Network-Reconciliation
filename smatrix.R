@@ -7,10 +7,14 @@ smatrix <- function(data.network) {
   other_cat <- unique(filter(data.network, char.before == 'other')$cat)
   
   # Calculate required dimensions and preallocate memory
+  if(length(char.before) == nrow(data.network)){ ## while flows all come from other node
+    number.row <- 1 + length(unique(char.after)) + length(unique(data.network$cat))
+  }
+  else{
   number.row <- 1 + 1 + ifelse(length((filter(data.network, char.before == 'other'))$cat) != 0, 1, 0) +
     ifelse(sum(unique(char.before) %in% "other"), length(unique(char.before)) - 1, length(unique(char.before))) +
     length(unique(char.after)) + length(unique(data.network$cat))
-  
+  }
   smatrix.network <- sparseMatrix(
     i = numeric(0),
     j = numeric(0),
@@ -18,6 +22,11 @@ smatrix <- function(data.network) {
     dims = c(number.row, length(unique(data.network$cat)))
   )
   
+  if(length(char.before) == nrow(data.network)){ ## while flows all come from other node
+    # total IN
+    smatrix.network[1, ] <- 1
+  }
+  else{
   # total IN
   smatrix.network[1, ] <- 1
   
@@ -32,24 +41,30 @@ smatrix <- function(data.network) {
                               rep(1, length(other_cat)))
   } else {
     h <- 0
+         }
   }
-  
   # IN series
+  h <- 1
   no.in.series <- length(unique(char.after))
   s.in <- unique(char.after)
   unique_cat_after <-sub(".*::", "", unique_cat)
   for (i in 1:no.in.series) {
     smatrix.network[h + i, ] <- as.integer(unique_cat_after %in% s.in[i])
   }
-  
-  # OUT series
-  no.out.series <- ifelse(sum(unique(char.before) %in% "other"), length(unique(char.before)) - 1,
-                          length(unique(char.before)))
-  s.out <- unique(char.before)[!unique(char.before) %in% "other"]
-  unique_cat_before <- sub("::.*", "", unique_cat)
-  for (i in 1:no.out.series) {
-    smatrix.network[h + no.in.series + i, ] <- as.integer(unique_cat_before %in% s.out[i])
+  if(length(char.before) == nrow(data.network)){ ## while flows all come from other node
+    no.out.series <- 0
   }
+  else{
+    # OUT series
+    no.out.series <- ifelse(sum(unique(char.before) %in% "other"), length(unique(char.before)) - 1,
+                            length(unique(char.before)))
+    s.out <- unique(char.before)[!unique(char.before) %in% "other"]
+    unique_cat_before <- sub("::.*", "", unique_cat)
+    for (i in 1:no.out.series) {
+      smatrix.network[h + no.in.series + i, ] <- as.integer(unique_cat_before %in% s.out[i])
+    }
+  }
+ 
   # Bottom level series
   smatrix.network[(h + no.in.series + no.out.series + 1):number.row, ] <- sparseMatrix(i = 1:length(unique_cat),
                                                                                        j = 1:length(unique_cat),
