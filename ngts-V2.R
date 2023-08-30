@@ -10,24 +10,30 @@ Aggreg.func.v2 <- function(data.network){
     reduce(`+`)
   TotalIn <- Matrix(TotalIn, nrow = length(TotalIn), sparse = TRUE)
   colnames(TotalIn) <- 'Total.in'
-  
-  # total OUT 
-  TotalOut <- data.network %>%
-    filter(char.before!='other') %>%
-    group_split(cat) %>%
-    map(~.[['series']]) %>%
-    reduce(`+`)
-  TotalOut <- Matrix(TotalOut, nrow = length(TotalOut), sparse = TRUE)
-  colnames(TotalOut) <- 'Total.out'
-  
-  # total Outer series (other)
-  Outer <- data.network %>%
-    filter(char.before =='other') %>%
-    group_split(cat) %>%
-    map(~.[['series']]) %>%
-    reduce(`+`)
-  Outer <- Matrix(Outer, nrow = length(Outer), sparse = TRUE)
-  colnames(Outer) <- 'Outer'
+  if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
+    TotalOut <- NULL
+    Outer <- NULL
+  }
+  else{
+    # total OUT 
+    TotalOut <- data.network %>%
+      filter(char.before!='other') %>%
+      group_split(cat) %>%
+      map(~.[['series']]) %>%
+      reduce(`+`)
+    TotalOut <- Matrix(TotalOut, nrow = length(TotalOut), sparse = TRUE)
+    colnames(TotalOut) <- 'Total.out'
+    
+    # total Outer series (other)
+    Outer <- data.network %>%
+      filter(char.before =='other') %>%
+      group_split(cat) %>%
+      map(~.[['series']]) %>%
+      reduce(`+`)
+    Outer <- Matrix(Outer, nrow = length(Outer), sparse = TRUE)
+    colnames(Outer) <- 'Outer'
+    
+  }
   
   # IN series
   DataIn <- data.network %>%
@@ -55,35 +61,41 @@ Aggreg.func.v2 <- function(data.network){
   if (ncol(SumIn) > 0) {
   colnames(SumIn) <- paste(NameIn, 'in', sep = '.')
   }
-  # OUT series
-  DataOut <- data.network %>%
-    filter(char.before != 'other') %>%
-    mutate('prev.id' = factor(sub("::.*", "", cat), level = unique(sub("::.*", "", cat)))) %>%
-    group_split(prev.id) 
-  
-  no.out.series <- ifelse(sum(unique(char.before) %in% "other"), length(unique(char.before)) - 1,
-                          length(unique(char.before)))
-  s.out <- unique(char.before)[!unique(char.before) %in% "other"]
-  unique_cat_before <- sub("::.*", "", unique_cat)
-  
-  SumOut <- Matrix(0, nrow = length(TotalOut), ncol = 0, sparse = TRUE)
-  NameOut <- c()
-  row_count_out <- 0
-  
-  for (i in 1:length(DataOut)) {
-    name.out <- unique(as.character(DataOut[[i]]$prev.id))
-    if (sum(unique_cat_before %in% s.out[i]) > 1) {  # Only include if there are multiple nodes
-      row_count_out <- row_count_out + 1
-      NameOut <- c(NameOut, name.out)
-      SumOut <- cbind(SumOut, DataOut[[i]] %>%
-                        group_split(cat) %>%
-                        map(~.[['series']]) %>%
-                        reduce(`+`))
+  if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
+    SumOut <- NULL
+  }
+  else{
+    # OUT series
+    DataOut <- data.network %>%
+      filter(char.before != 'other') %>%
+      mutate('prev.id' = factor(sub("::.*", "", cat), level = unique(sub("::.*", "", cat)))) %>%
+      group_split(prev.id) 
+    
+    no.out.series <- ifelse(sum(unique(char.before) %in% "other"), length(unique(char.before)) - 1,
+                            length(unique(char.before)))
+    s.out <- unique(char.before)[!unique(char.before) %in% "other"]
+    unique_cat_before <- sub("::.*", "", unique_cat)
+    
+    SumOut <- Matrix(0, nrow = length(TotalOut), ncol = 0, sparse = TRUE)
+    NameOut <- c()
+    row_count_out <- 0
+    
+    for (i in 1:length(DataOut)) {
+      name.out <- unique(as.character(DataOut[[i]]$prev.id))
+      if (sum(unique_cat_before %in% s.out[i]) > 1) {  # Only include if there are multiple nodes
+        row_count_out <- row_count_out + 1
+        NameOut <- c(NameOut, name.out)
+        SumOut <- cbind(SumOut, DataOut[[i]] %>%
+                          group_split(cat) %>%
+                          map(~.[['series']]) %>%
+                          reduce(`+`))
+      }
+    }
+    if (ncol(SumOut) > 0) {
+      colnames(SumOut) <- paste(NameOut, 'out', sep = '.')
     }
   }
-  if (ncol(SumOut) > 0) {
-  colnames(SumOut) <- paste(NameOut, 'out', sep = '.')
-  }
+ 
   # Bottom level series
   BottomLevel <- Matrix(as.numeric(data.network$series), nrow = nrow(TotalIn), sparse = TRUE)
   colnames(BottomLevel) <- unique(data.network$cat)

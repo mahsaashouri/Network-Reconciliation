@@ -7,7 +7,7 @@ smatrix <- function(data.network) {
   other_cat <- unique(filter(data.network, char.before == 'other')$cat)
   
   # Calculate required dimensions and preallocate memory
-  if(length(char.before) == nrow(data.network)){ ## while flows all come from other node
+  if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
     number.row <- 1 + length(unique(char.after)) + length(unique(data.network$cat))
   }
   else{
@@ -22,7 +22,7 @@ smatrix <- function(data.network) {
     dims = c(number.row, length(unique(data.network$cat)))
   )
   
-  if(length(char.before) == nrow(data.network)){ ## while flows all come from other node
+  if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
     # total IN
     smatrix.network[1, ] <- 1
   }
@@ -51,7 +51,7 @@ smatrix <- function(data.network) {
   for (i in 1:no.in.series) {
     smatrix.network[h + i, ] <- as.integer(unique_cat_after %in% s.in[i])
   }
-  if(length(char.before) == nrow(data.network)){ ## while flows all come from other node
+  if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
     no.out.series <- 0
   }
   else{

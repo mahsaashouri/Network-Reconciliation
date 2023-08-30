@@ -2,6 +2,8 @@
 Aggreg.func <- function(data.network){
   char.before <- sub("::.*", "", data.network$cat)
   char.after <- sub(".*::", "", data.network$cat)
+  unique_cat <- unique(data.network$cat)
+  other_cat <- unique(filter(data.network, char.before == 'other')$cat)
   
   # total IN 
   TotalIn <- data.network %>%
@@ -11,7 +13,7 @@ Aggreg.func <- function(data.network){
   TotalIn <- Matrix(TotalIn, nrow = length(TotalIn), sparse = TRUE)
   colnames(TotalIn) <- 'Total.in'
   
-  if(length(char.before) == nrow(data.network)){ ## while flows all come from other node
+  if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
     
     TotalOut <- NULL
     Outer <- NULL
@@ -56,7 +58,7 @@ else{
       reduce(`+`)
   }
   
-  if(length(char.before) == nrow(data.network)){ ## while flows all come from other node
+  if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
     SumOut <- NULL
   }
   else{
