@@ -25,6 +25,7 @@ smatrix <- function(data.network) {
   if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
     # total IN
     smatrix.network[1, ] <- 1
+    h <- 1
   }
   else{
   # total IN
@@ -44,7 +45,6 @@ smatrix <- function(data.network) {
          }
   }
   # IN series
-  h <- 1
   no.in.series <- length(unique(char.after))
   s.in <- unique(char.after)
   unique_cat_after <-sub(".*::", "", unique_cat)
