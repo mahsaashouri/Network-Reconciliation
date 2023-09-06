@@ -52,7 +52,24 @@ largest_subgraph_data_id <- largest_subgraph_data %>%
 #     margin=-.2,
 #     vertex.shape='circle')
 
-click.data.network.all <- subset(data.network, data.network$cat %in% largest_subgraph_data_id$id )
+#click.data.network.all <- subset(data.network, data.network$cat %in% largest_subgraph_data_id$id )
+## If we want to choose graph with most frequent nodes
+tst3 <- largest_subgraph_data_id$V1[largest_subgraph_data_id$V1 != "other"]
+page_counts <- table(c(tst3, largest_subgraph_data_id$V2))
+# Find the pages with the highest frequency
+max_frequency <- max(page_counts)
+most_frequent_pages <- names(head(sort(page_counts, decreasing = TRUE), 1000))
+
+
+library(dplyr)
+df <- as.data.frame(unique(data.network.all$id))
+colnames(df)  <- "cat"
+
+filtered_df <- df %>%
+  filter(sapply(strsplit(unique(df$cat), "::"), function(x) any(x[1] == most_frequent_pages | x[2] == most_frequent_pages)))
+
+click.data.network.all.sample <- subset(click.data.network.all, click.data.network.all$cat %in% filtered_df$cat)
+
 
 ## Smooth the series
 #library(purrr)
@@ -66,8 +83,8 @@ click.data.network.all <- subset(data.network, data.network$cat %in% largest_sub
 #  imap(~ tibble(cat = .y, series = .x)) %>%
 #  bind_rows()
 
-smatrix.net <- smatrix(data.network = click.data.network.all)
-ngts.net <- ts(as.matrix(Aggreg.func(click.data.network.all)), frequency = 12, start = c(2017, 11))
+smatrix.net <- smatrix.v2(data.network = click.data.network.all.sample)
+ngts.net <- ts(as.matrix(Aggreg.func.v2(click.data.network.all.sample)), frequency = 12, start = c(2017, 11))
 
 ## plot the series 
 #ngts.net.melt <- reshape2::melt(ngts.net)
