@@ -115,19 +115,23 @@ for(i in seq(NCOL(net.train))){
 }
 colnames(fc.arima) <- colnames(net.test)
 colnames(train.fit) <- colnames(net.train)
+fc.arima[fc.arima <0 ] <- 0
+
 
 write.csv(fc.arima, 'fc.arima.unrec.csv')
 ## residuals
 res <- as.matrix(as.data.frame(net.train) - train.fit)
 write.csv(res, 'res.train.arima.csv')
+
+lambda.1 <- as(diag(rowSums(smatrix.net)), 'dgCMatrix')
+fc.CG.null <- CG(fc.arima, smatrix.net, weights = lambda.1)
+write.csv(t(fc.CG.null), 'fc.rec.CG.lambda.arima.csv')
+
 tar <- lowerD(res)
 shrink <- shrink.estim(res, tar)
 w.1 <- shrink[[1]]
 lambda <- shrink[[2]]
 weights <-  methods::as(w.1, "sparseMatrix")
-
-fc.CG.null <- CG(fc.arima, smatrix.net, weights = NULL)
-write.csv(t(fc.CG.null), 'fc.rec.CG.null.arima.csv')
 fc.CG <- CG(fc.arima, smatrix.net, weights = weights)
 write.csv(t(fc.CG), 'fc.rec.CG.shrink.arima.csv')
 
@@ -143,48 +147,23 @@ for(i in seq(NCOL(net.train))){
 }
 colnames(fc.ols) <- colnames(net.test)
 colnames(train.fit) <- colnames(net.train)
-
+fc.ols[fc.ols < 0] <- 0
 write.csv(fc.ols, 'fc.ols.unrec.csv')
 ## residuals
 res <- as.matrix(as.data.frame(net.train)[-1,] - train.fit)
 write.csv(res, 'res.train.ols.csv')
+
+lambda.1 <- as(diag(rowSums(smatrix.net)), 'dgCMatrix')
+fc.CG.lambda <- CG(fc.ols, smatrix.net, weights = lambda.1)
+write.csv(t(fc.CG.lambda), 'fc.rec.CG.lambda.ols.csv')
+
 tar <- lowerD(res)
 shrink <- shrink.estim(res, tar)
 w.1 <- shrink[[1]]
 lambda <- shrink[[2]]
 weights <-  methods::as(w.1, "sparseMatrix")
-
-fc.CG.null <- CG(fc.ols, smatrix.net, weights = NULL)
-write.csv(t(fc.CG.null), 'fc.rec.CG.null.ols.csv')
 fc.CG <- CG(fc.ols, smatrix.net, weights = weights)
 write.csv(t(fc.CG), 'fc.rec.CG.shrink.ols.csv')
-
-
-## NAIVE
-fc.naive <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
-train.fit <- matrix(NA, nrow = nrow(net.train), ncol = ncol(net.train))
-for(i in seq(NCOL(net.train))){
-  fc.1 <- naive(net.train[,i], h)
-  fc.naive[,i] <- fc.1$mean
-  train.fit[,i] <- fc.1$fitted
-}
-colnames(fc.naive) <- colnames(net.test)
-colnames(train.fit) <- colnames(net.train)
-
-write.csv(fc.naive, 'fc.naive.unrec.csv')
-## residuals
-res <- as.matrix(as.data.frame(net.train)[-1,] - (train.fit)[-1,])
-write.csv(res, 'res.train.naive.csv')
-tar <- lowerD(res)
-shrink <- shrink.estim(res, tar)
-w.1 <- shrink[[1]]
-lambda <- shrink[[2]]
-weights <-  methods::as(w.1, "sparseMatrix")
-
-fc.CG.null <- CG(fc.naive, smatrix.net, weights = NULL)
-write.csv(t(fc.CG.null), 'fc.rec.CG.null.naive.csv')
-fc.CG <- CG(fc.naive, smatrix.net, weights = weights)
-write.csv(t(fc.CG), 'fc.rec.CG.shrink.naive.csv')
 
 
 ## ETS
@@ -197,19 +176,21 @@ for(i in seq(NCOL(net.train))){
 }
 colnames(fc.ets) <- colnames(net.test)
 colnames(train.fit) <- colnames(net.train)
+fc.ets[fc.ets < 0] <- 0
 
 write.csv(fc.ets, 'fc.ets.unrec.csv')
 ## residuals
 res <- as.matrix(as.data.frame(net.train) - (train.fit)[-1,])
 write.csv(res, 'res.train.ets.csv')
+lambda.1 <- as(diag(rowSums(smatrix.net)), 'dgCMatrix')
+fc.CG.lambda <- CG(fc.ets, smatrix.net, weights = lambda.1)
+write.csv(t(fc.CG.lambda), 'fc.rec.CG.lambda.ets.csv')
+
 tar <- lowerD(res)
 shrink <- shrink.estim(res, tar)
 w.1 <- shrink[[1]]
 lambda <- shrink[[2]]
 weights <-  methods::as(w.1, "sparseMatrix")
-
-fc.CG.null <- CG(fc.ets, smatrix.net, weights = NULL)
-write.csv(t(fc.CG.null), 'fc.rec.CG.null.ets.csv')
 fc.CG <- CG(fc.ets, smatrix.net, weights = weights)
 write.csv(t(fc.CG), 'fc.rec.CG.shrink.ets.csv')
 
