@@ -110,7 +110,7 @@ fc.all <- bind_rows(bind_cols('fc' = arima.unrec.melt$value, 'error' = res.arima
                 'Method' = rep('ols', nrow(rec.CG.shrink.ols.melt)),
                 'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.shrink'),
                 bind_cols('fc' = net.test.melt$value, 'error' = 0,
-                'Method' = rep('actual', nrow(rec.CG.shrink.naive.melt)),
+                'Method' = rep('actual', nrow(rec.CG.shrink.ols.melt)),
                 'Series' = arima.unrec.melt$variable, 'Rec' = 'actual')
                 )
 
@@ -138,6 +138,47 @@ fc.all <- bind_cols(fc.all, 'id' = rep(1:12, nrow(fc.all)/12))
 rmse_results <- fc.all %>%
   group_by(Level, Rec, Method) %>%
   summarise(rmse = sqrt(mean(error^2)))
+
+library(tidyverse)
+
+# Reshape the data to long format for plotting
+
+error.all <- fc.all %>%
+  select(error, Method, Rec, Level) %>%
+  filter(Rec != "rec.lambda" & Method !="actual") %>%
+  mutate(id = factor(paste(Method, Rec, sep = "."),
+                     levels = c("ets.rec.shrink", "ets.unrec", "arima.rec.shrink", "arima.unrec", 
+                                "ols.rec.shrink","ols.unrec"),
+                     labels = c("ets.rec.shrink", "ets.unrec", "arima.rec.shrink", "arima.unrec", 
+                                "ols.rec.shrink","ols.unrec")))
+
+filtered_data <- error.all %>%
+  filter(Level != "Outer" & Level != "Total.in"& Level != "Total.out")
+
+
+# Create a box plot with facets
+
+boxplot.stat <- function(x) {
+  coef <- 1.5
+  n <- sum(!is.na(x))
+  # calculate quantiles
+  stats <- quantile(x, probs = c(0.0, 0.25, 0.5, 0.75, 1.0))
+  names(stats) <- c("ymin", "lower", "middle", "upper", "ymax")
+  iqr <- diff(stats[c(2, 4)])
+  # set whiskers
+  outliers <- x < (stats[2] - coef * iqr) | x > (stats[4] + coef * iqr)
+  if (any(outliers)) {
+    stats[c(1, 5)] <- range(c(stats[2:4], x[!outliers]), na.rm = TRUE)
+  }
+  return(stats)
+}
+
+ggplot(filtered_data, aes(x = id, y = error, fill = id)) +
+  #geom_boxplot() +
+  stat_summary(fun.data = boxplot.stat, geom = "boxplot", alpha = 0.5) +
+  facet_wrap(~ Level) +
+  labs(y = "Value") 
+
 
 filtered_data <- fc.all %>%
   filter(Series == 'other::World_Thinking_Day')
