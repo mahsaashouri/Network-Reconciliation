@@ -12,73 +12,73 @@ net.train <- read_csv('net.train.csv')[,-1]
 res.train.arima <- read_csv('res.train.arima.csv')[,-1]
 res.train.ets <- read_csv('res.train.ets.csv')[,-1]
 res.train.ols <- read_csv('res.train.ols.csv')[,-1]
-res.train.naive <- read_csv('res.train.naive.csv')[,-1]
+
 
 ## base fc
 arima.unrec <- read_csv('fc.arima.unrec.csv')[,-1]
 ets.unrec <- read_csv('fc.ets.unrec.csv')[,-1] 
 ols.unrec <- read_csv('fc.ols.unrec.csv')[,-1] 
-naive.unrec <- read_csv('fc.naive.unrec.csv')[,-1] 
+
 ## base res
 res.arima.unrec <- net.test - arima.unrec
 res.ets.unrec <- net.test - ets.unrec
 res.ols.unrec <- net.test - ols.unrec
-res.naive.unrec <- net.test - naive.unrec
+
 ## base train fc
 fc.train.arima.unrec <- res.train.arima[-1,] + res.train.arima[-1,]
 fc.train.ets.unrec <- res.train.ets[-1,] + res.train.ets[-1,]
 fc.train.ols.unrec <- res.train.ols + res.train.ols
-fc.train.naive.unrec <- res.train.naive + res.train.naive
 
-## rec fc - null weight
-CG.null.arima <- read_csv('fc.rec.CG.null.arima.csv')[,-1]
-CG.null.ets <- read_csv('fc.rec.CG.null.ets.csv')[,-1]
-CG.null.ols <- read_csv('fc.rec.CG.null.ols.csv')[,-1]
-CG.null.naive <- read_csv('fc.rec.CG.null.naive.csv')[,-1]
-## rec fc - null weight - res
-res.CG.null.arima <- net.test - CG.null.arima
-res.CG.null.ets <- net.test - CG.null.ets
-res.CG.null.ols <- net.test - CG.null.ols
-res.CG.null.naive <- net.test - CG.null.naive
+
+## rec fc - lambda weight
+CG.lambda.arima <- read_csv('fc.rec.CG.lambda.arima.csv')[,-1]
+CG.lambda.ets <- read_csv('fc.rec.CG.lambda.ets.csv')[,-1]
+CG.lambda.ols <- read_csv('fc.rec.CG.lambda.ols.csv')[,-1]
+
+## rec fc - lambda weight - res
+res.CG.lambda.arima <- net.test - CG.lambda.arima
+res.CG.lambda.ets <- net.test - CG.lambda.ets
+res.CG.lambda.ols <- net.test - CG.lambda.ols
+
 
 ## rec fc - shrink weight
 rec.CG.shrink.arima <- read_csv('fc.rec.CG.shrink.arima.csv')[,-1]
 rec.CG.shrink.ets <- read_csv('fc.rec.CG.shrink.ets.csv')[,-1]
 rec.CG.shrink.ols <- read_csv('fc.rec.CG.shrink.ols.csv')[,-1]
-rec.CG.shrink.naive <- read_csv('fc.rec.CG.shrink.naive.csv')[,-1]
+
 ## rec fc - shrink weight - res
 res.rec.CG.shrink.arima <- net.test - rec.CG.shrink.arima
 res.rec.CG.shrink.ets <- net.test - rec.CG.shrink.ets
 res.rec.CG.shrink.ols <- net.test - rec.CG.shrink.ols
-res.rec.CG.shrink.naive <- net.test - rec.CG.shrink.naive
+
 
 
 arima.unrec.melt <- reshape2::melt(arima.unrec)
 ets.unrec.melt <- reshape2::melt(ets.unrec)
 ols.unrec.melt <- reshape2::melt(ols.unrec)
-naive.unrec.melt <- reshape2::melt(naive.unrec)
-CG.null.arima.melt <- reshape2::melt(CG.null.arima)
-CG.null.ets.melt <- reshape2::melt(CG.null.ets)
-CG.null.ols.melt <- reshape2::melt(CG.null.ols)
-CG.null.naive.melt <- reshape2::melt(CG.null.naive)
+
+CG.lambda.arima.melt <- reshape2::melt(CG.lambda.arima)
+CG.lambda.ets.melt <- reshape2::melt(CG.lambda.ets)
+CG.lambda.ols.melt <- reshape2::melt(CG.lambda.ols)
+
 rec.CG.shrink.arima.melt <- reshape2::melt(rec.CG.shrink.arima)
 rec.CG.shrink.ets.melt <- reshape2::melt(rec.CG.shrink.ets)
 rec.CG.shrink.ols.melt <- reshape2::melt(rec.CG.shrink.ols)
-rec.CG.shrink.naive.melt <- reshape2::melt(rec.CG.shrink.naive)
+
 
 
 res.arima.unrec.melt <- reshape2::melt(res.arima.unrec)
 res.ets.unrec.melt <- reshape2::melt(res.ets.unrec)
 res.ols.unrec.melt <- reshape2::melt(res.ols.unrec)
-res.naive.unrec.melt <- reshape2::melt(res.naive.unrec)
-res.CG.null.arima.melt <- reshape2::melt(res.CG.null.arima)
-res.CG.null.ets.melt <- reshape2::melt(res.CG.null.ets)
-res.CG.null.ols.melt <- reshape2::melt(res.CG.null.ols)
-res.CG.null.naive.melt <- reshape2::melt(res.CG.null.naive)
+
+res.CG.lambda.arima.melt <- reshape2::melt(res.CG.lambda.arima)
+res.CG.lambda.ets.melt <- reshape2::melt(res.CG.lambda.ets)
+res.CG.lambda.ols.melt <- reshape2::melt(res.CG.lambda.ols)
+
 res.rec.CG.shrink.arima.melt <- reshape2::melt(res.rec.CG.shrink.arima)
 res.rec.CG.shrink.ets.melt <- reshape2::melt(res.rec.CG.shrink.ets)
 res.rec.CG.shrink.ols.melt <- reshape2::melt(res.rec.CG.shrink.ols)
-res.rec.CG.shrink.naive.melt <- reshape2::melt(res.rec.CG.shrink.naive)
+
 
 net.test.melt <- reshape2::melt(net.test)
 
@@ -91,21 +91,15 @@ fc.all <- bind_rows(bind_cols('fc' = arima.unrec.melt$value, 'error' = res.arima
                 bind_cols('fc' = ols.unrec.melt$value, 'error' = res.ols.unrec.melt$value,  
                 'Method' = rep('ols', nrow(ols.unrec.melt)),
                 'Series' =arima.unrec.melt$variable, 'Rec' = 'unrec'),
-                bind_cols('fc' = naive.unrec.melt$value, 'error' = res.naive.unrec.melt$value,  
-                'Method' = rep('naive', nrow(naive.unrec.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'unrec'),
-                bind_cols('fc' = CG.null.arima.melt$value, 'error' = res.CG.null.arima.melt$value,  
-                'Method' = rep('arima', nrow(CG.null.arima.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.null'), 
-                bind_cols('fc' = CG.null.ets.melt$value, 'error' = res.CG.null.ets.melt$value,  
-                'Method' = rep('ets', nrow(CG.null.ets.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.null'), 
-                bind_cols('fc' = CG.null.ols.melt$value, 'error' = res.CG.null.ols.melt$value,  
-                'Method' = rep('ols', nrow(CG.null.ols.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.null'), 
-                bind_cols('fc' = CG.null.naive.melt$value, 'error' = res.CG.null.naive.melt$value,  
-                'Method' = rep('naive', nrow(CG.null.naive.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.null'), 
+                bind_cols('fc' = CG.lambda.arima.melt$value, 'error' = res.CG.lambda.arima.melt$value,  
+                'Method' = rep('arima', nrow(CG.lambda.arima.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.lambda'), 
+                bind_cols('fc' = CG.lambda.ets.melt$value, 'error' = res.CG.lambda.ets.melt$value,  
+                'Method' = rep('ets', nrow(CG.lambda.ets.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.lambda'), 
+                bind_cols('fc' = CG.lambda.ols.melt$value, 'error' = res.CG.lambda.ols.melt$value,  
+                'Method' = rep('ols', nrow(CG.lambda.ols.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.lambda'), 
                 bind_cols('fc' = rec.CG.shrink.arima.melt$value, 'error' = res.rec.CG.shrink.arima.melt$value,  
                 'Method' = rep('arima', nrow(rec.CG.shrink.arima.melt)),
                 'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.shrink'), 
@@ -114,9 +108,6 @@ fc.all <- bind_rows(bind_cols('fc' = arima.unrec.melt$value, 'error' = res.arima
                 'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.shrink'),
                 bind_cols('fc' = rec.CG.shrink.ols.melt$value, 'error' = res.rec.CG.shrink.ols.melt$value,  
                 'Method' = rep('ols', nrow(rec.CG.shrink.ols.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.shrink'),
-                bind_cols('fc' = rec.CG.shrink.naive.melt$value, 'error' = res.rec.CG.shrink.naive.melt$value,  
-                'Method' = rep('naive', nrow(rec.CG.shrink.naive.melt)),
                 'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.shrink'),
                 bind_cols('fc' = net.test.melt$value, 'error' = 0,
                 'Method' = rep('actual', nrow(rec.CG.shrink.naive.melt)),
