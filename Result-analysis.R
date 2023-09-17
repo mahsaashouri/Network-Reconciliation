@@ -146,11 +146,16 @@ library(tidyverse)
 error.all <- fc.all %>%
   select(error, Method, Rec, Level) %>%
   filter(Rec != "rec.lambda" & Method !="actual") %>%
+  #filter(Method !="actual") %>%
   mutate(id = factor(paste(Method, Rec, sep = "."),
-                     levels = c("ets.rec.shrink", "ets.unrec", "arima.rec.shrink", "arima.unrec", 
-                                "ols.rec.shrink","ols.unrec"),
-                     labels = c("ets.rec.shrink", "ets.unrec", "arima.rec.shrink", "arima.unrec", 
-                                "ols.rec.shrink","ols.unrec")))
+                     #levels = c("ets.rec.shrink", "ets.rec.lambda", "ets.unrec", "arima.rec.shrink", "arima.rec.lambda","arima.unrec", 
+                      #          "ols.rec.shrink", "ols.rec.lambda","ols.unrec"),
+                     #labels = c("ets.rec.shrink", "ets.rec.lambda", "ets.unrec", "arima.rec.shrink", "arima.rec.lambda","arima.unrec", 
+                     #           "ols.rec.shrink", "ols.rec.lambda","ols.unrec")))
+                     levels = c("ets.rec.shrink",  "ets.unrec", "arima.rec.shrink","arima.unrec", 
+                                          "ols.rec.shrink","ols.unrec"),
+                     labels = c("ets.rec.shrink",  "ets.unrec", "arima.rec.shrink", "arima.unrec", 
+                                        "ols.rec.shrink", "ols.unrec")))
 
 filtered_data <- error.all %>%
   filter(Level != "Outer" & Level != "Total.in"& Level != "Total.out")

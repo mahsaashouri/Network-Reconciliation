@@ -52,7 +52,7 @@ largest_subgraph_data_id <- largest_subgraph_data %>%
 #     margin=-.2,
 #     vertex.shape='circle')
 
-#click.data.network.all <- subset(data.network, data.network$cat %in% largest_subgraph_data_id$id )
+click.data.network.all <- subset(data.network, data.network$cat %in% largest_subgraph_data_id$id )
 ## If we want to choose graph with most frequent nodes
 tst3 <- largest_subgraph_data_id$V1[largest_subgraph_data_id$V1 != "other"]
 page_counts <- table(c(tst3, largest_subgraph_data_id$V2))
