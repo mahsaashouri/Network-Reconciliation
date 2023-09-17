@@ -6,11 +6,11 @@ library(hts)
 library(SparseM)
 source('smatrix-V2.R')
 source('ngts-V2.R')
-source('CG.shrink.R')
+source('CG-shrink.R')
 source('olsfc.pwfc.AIC-BIC.R')
 
 
-data.network.all <- read_csv('SampleEVENT.csv')[,-1]
+data.network.all <- read_csv('SampleClickProduct.csv')[,-1]
 data.network <- data.network.all[,c('id', 'freq')]
 colnames(data.network) <- c('cat', 'series')
 
@@ -109,14 +109,16 @@ h <- 12
 fc.arima <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
 train.fit <- matrix(NA, nrow = nrow(net.train), ncol = ncol(net.train))
 for(i in seq(NCOL(net.train))){
-  fc <- forecast(auto.arima(net.train[,i], D = 1, d = 1), h = h)
+  fc <- forecast(auto.arima(log(net.train[,i]+ 0.001), D = 1, d = 1), h = h)
   fc.arima[,i] <- fc$mean
   train.fit[,i] <- fc$fitted 
 }
 colnames(fc.arima) <- colnames(net.test)
 colnames(train.fit) <- colnames(net.train)
-fc.arima[fc.arima <0 ] <- 0
+#fc.arima[fc.arima <0 ] <- 0
 
+fc.arima <- exp(fc.arima)
+train.fit <- exp(train.fit)
 
 write.csv(fc.arima, 'fc.arima.unrec.csv')
 ## residuals
