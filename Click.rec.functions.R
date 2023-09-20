@@ -195,6 +195,36 @@ fc.CG <- CG(fc.ets, smatrix.net, weights = weights)
 write.csv(t(fc.CG), 'fc.rec.CG.shrink.ets.csv')
 
 
+## stl
+fc.stl <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
+train.fit <- matrix(NA, nrow = nrow(net.train), ncol = ncol(net.train))
+for(i in seq(NCOL(net.train))){
+  fc.1 <- forecast(stl(net.train[,i], s.window = 'periodic'), h = h, method = 'arima')
+  fc.stl[,i] <- fc.1$mean
+  train.fit[,i] <- fc.1$fitted
+}
+colnames(fc.stl) <- colnames(net.test)
+colnames(train.fit) <- colnames(net.train)
+#fc.stl[fc.stl < 0] <- 0
+
+write.csv(fc.stl, 'fc.stl.unrec.csv')
+## residuals
+res <- as.matrix(as.data.frame(net.train) - (train.fit)[-1,])
+write.csv(res, 'res.train.stl.csv')
+lambda.1 <- as(diag(rowSums(smatrix.net)), 'dgCMatrix')
+fc.CG.lambda <- CG(fc.stl, smatrix.net, weights = lambda.1)
+write.csv(t(fc.CG.lambda), 'fc.rec.CG.lambda.stl.csv')
+
+tar <- lowerD(res)
+shrink <- shrink.estim(res, tar)
+w.1 <- shrink[[1]]
+lambda <- shrink[[2]]
+weights <-  methods::as(w.1, "sparseMatrix")
+fc.CG <- CG(fc.stl, smatrix.net, weights = weights)
+write.csv(t(fc.CG), 'fc.rec.CG.shrink.stl.csv')
+
+
+
 ## Plot the results
 #merged_arima <- rbind(cbind(reshape2::melt(net.test), data = 'test.set'), cbind(reshape2::melt(fc.arima), data = 'arima'), 
 #                     cbind(reshape2::melt(t(fc.CG)), data = 'arima.rec'))
