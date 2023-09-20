@@ -23,7 +23,7 @@ click.2023.02 <- click.2023.02 %>%
 #write.csv(click202302 , '2023-02.csv')
 ## get the same sample from other dataframes
 ## Use product sample - not randomly sampled series
-click202302  <- read_csv('2023-02.csv')#[,-1]
+click202302  <- click.data.network.all.sample#read_csv('2023-02.csv')#[,-1]
 
 
 ## list of datasets to read

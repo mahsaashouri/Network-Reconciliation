@@ -145,20 +145,20 @@ library(tidyverse)
 
 error.all <- fc.all %>%
   select(error, Method, Rec, Level) %>%
-  filter(Rec != "rec.lambda" & Method !="actual") %>%
-  #filter(Method !="actual") %>%
+  #filter(Rec != "rec.lambda" & Method !="actual") %>%
+  filter(Method !="actual") %>%
   mutate(id = factor(paste(Method, Rec, sep = "."),
-                     #levels = c("ets.rec.shrink", "ets.rec.lambda", "ets.unrec", "arima.rec.shrink", "arima.rec.lambda","arima.unrec", 
-                      #          "ols.rec.shrink", "ols.rec.lambda","ols.unrec"),
-                     #labels = c("ets.rec.shrink", "ets.rec.lambda", "ets.unrec", "arima.rec.shrink", "arima.rec.lambda","arima.unrec", 
-                     #           "ols.rec.shrink", "ols.rec.lambda","ols.unrec")))
-                     levels = c("ets.rec.shrink",  "ets.unrec", "arima.rec.shrink","arima.unrec", 
-                                          "ols.rec.shrink","ols.unrec"),
-                     labels = c("ets.rec.shrink",  "ets.unrec", "arima.rec.shrink", "arima.unrec", 
-                                        "ols.rec.shrink", "ols.unrec")))
+                     levels = c("ets.rec.shrink", "ets.rec.lambda", "ets.unrec", "arima.rec.shrink", "arima.rec.lambda","arima.unrec", 
+                                "ols.rec.shrink", "ols.rec.lambda","ols.unrec"),
+                     labels = c("ets.rec.shrink", "ets.rec.lambda", "ets.unrec", "arima.rec.shrink", "arima.rec.lambda","arima.unrec", 
+                                "ols.rec.shrink", "ols.rec.lambda","ols.unrec")))
+                     #levels = c("ets.rec.shrink",  "ets.unrec", "arima.rec.shrink","arima.unrec", 
+                      #                    "ols.rec.shrink","ols.unrec"),
+                     #labels = c("ets.rec.shrink",  "ets.unrec", "arima.rec.shrink", "arima.unrec", 
+                      #                  "ols.rec.shrink", "ols.unrec")))
 
 filtered_data <- error.all %>%
-  filter(Level != "Outer" & Level != "Total.in"& Level != "Total.out")
+  filter(Level != "Outer" & Level != "Total.in"& Level != "Total.out" & Level != "Outflow")
 
 
 # Create a box plot with facets
@@ -178,7 +178,7 @@ boxplot.stat <- function(x) {
   return(stats)
 }
 
-ggplot(filtered_data, aes(x = id, y = error, fill = id)) +
+ggplot(error.all, aes(x = id, y = error, fill = id)) +
   #geom_boxplot() +
   stat_summary(fun.data = boxplot.stat, geom = "boxplot", alpha = 0.5) +
   facet_wrap(~ Level) +

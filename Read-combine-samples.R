@@ -42,9 +42,9 @@ SampleClick <- SampleClick %>%
   (function(x) { x[is.na(x)] <- 0; return(x) })
 
 ### removing 80% zero series ## total series to work on is 843 time series
-SampleClick <- SampleClick %>%
+SampleClick1 <- SampleClick %>%
   group_by(id) %>%
   filter(mean(freq == 0) <= 0.7)
 
 
-write.csv(SampleClick, 'SampleGPE.csv')
+write.csv(SampleClick, 'Sample4Most.csv')
