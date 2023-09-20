@@ -109,7 +109,7 @@ h <- 12
 fc.arima <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
 train.fit <- matrix(NA, nrow = nrow(net.train), ncol = ncol(net.train))
 for(i in seq(NCOL(net.train))){
-  fc <- forecast(auto.arima(log(net.train[,i]+ 0.001), D = 1, d = 1), h = h)
+  fc <- forecast(auto.arima(net.train[,i], D = 1, d = 1), h = h)
   fc.arima[,i] <- fc$mean
   train.fit[,i] <- fc$fitted 
 }
@@ -117,8 +117,6 @@ colnames(fc.arima) <- colnames(net.test)
 colnames(train.fit) <- colnames(net.train)
 #fc.arima[fc.arima <0 ] <- 0
 
-fc.arima <- exp(fc.arima)
-train.fit <- exp(train.fit)
 
 write.csv(fc.arima, 'fc.arima.unrec.csv')
 ## residuals
@@ -149,7 +147,7 @@ for(i in seq(NCOL(net.train))){
 }
 colnames(fc.ols) <- colnames(net.test)
 colnames(train.fit) <- colnames(net.train)
-fc.ols[fc.ols < 0] <- 0
+#fc.ols[fc.ols < 0] <- 0
 write.csv(fc.ols, 'fc.ols.unrec.csv')
 ## residuals
 res <- as.matrix(as.data.frame(net.train)[-1,] - train.fit)
@@ -178,7 +176,7 @@ for(i in seq(NCOL(net.train))){
 }
 colnames(fc.ets) <- colnames(net.test)
 colnames(train.fit) <- colnames(net.train)
-fc.ets[fc.ets < 0] <- 0
+#fc.ets[fc.ets < 0] <- 0
 
 write.csv(fc.ets, 'fc.ets.unrec.csv')
 ## residuals
