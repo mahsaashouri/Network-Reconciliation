@@ -196,11 +196,12 @@ boxplot.stat <- function(x) {
   return(stats)
 }
 
-ggplot(filtered_data, aes(x = id, y = (error-mean(error))/sd(error), fill = id)) +
+ggplot(filtered_data, aes(x = id, y = error/100000, fill = id)) +
   #geom_boxplot() +
   stat_summary(fun.data = boxplot.stat, geom = "boxplot", alpha = 0.5) +
   facet_wrap(~ Level) +
-  labs(y = "Value") 
+  labs(y = "Value") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggplot(filtered_data, aes(x = scale(error), color = id)) +
   geom_density(alpha = 0.2) + 
