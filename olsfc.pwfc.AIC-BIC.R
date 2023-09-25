@@ -1,4 +1,4 @@
-olsfc.pwfc <- function(x, h, breakpoints = c(5, 10, 15, 20), maxlag = 0, nolag = NULL, criterion = "AIC") {
+olsfc.pwfc <- function(x, h, breakpoints = c(5, 15, 25), maxlag = 0, nolag = NULL, criterion = "AIC") {
   n <- length(x)
   num_segments <- length(breakpoints) + 1
   
