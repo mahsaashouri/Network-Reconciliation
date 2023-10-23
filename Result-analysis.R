@@ -181,9 +181,13 @@ fc.all <- bind_rows(fc.all %>%
                     fc.all %>% filter(!grepl('\\.in$|\\.out$|Outer$', Series)) %>%
                       mutate (Level = 'Bottom level'))
 
-fc.all <- bind_cols(fc.all, 'id' = rep(1:4, nrow(fc.all)/4))
+fc.all <- bind_cols(fc.all, 'id' = rep(1:6, nrow(fc.all)/6))
 
 # Group by Level, rec_unrec, and method, then calculate RMSE
+rmse_results_all <- fc.all %>%
+  group_by(Rec, Method) %>%
+  summarise(rmse = sqrt(mean(error^2)))
+
 rmse_results <- fc.all %>%
   group_by(Level, Rec, Method) %>%
   summarise(rmse = sqrt(mean(error^2)))
