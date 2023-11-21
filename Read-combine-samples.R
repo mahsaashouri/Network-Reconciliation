@@ -16,10 +16,11 @@ file_list <- lapply(file_names, function(x){
 SampleClick <- rbindlist(file_list)
 
 
+SampleClick <- rbind(SampleClick, click202302)
 ## add up repeated rows
 SampleClick <- SampleClick %>%
   group_by(id, date) %>%
-  summarise(freq = sum(freq))
+  summarise(freq = sum(as.numeric(freq)))
 
 ## fill incomplete monthly series ## total number of series 843- length of each series: 62
 
@@ -47,4 +48,4 @@ SampleClick1 <- SampleClick %>%
   filter(mean(freq == 0) <= 0.7)
 
 
-write.csv(SampleClick1, 'SampleCountriesMost.csv')
+write.csv(SampleClick1, 'Sample8Most.csv')

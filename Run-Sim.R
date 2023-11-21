@@ -15,6 +15,22 @@ source('ngts-V2.R')
 
 
 actual.sim <- readr::read_csv('actual.sim.noise.FH.4Most.csv')
+## in case any problem with labeling 
+#tst <- actual.sim %>%
+#  group_split(Var2)
+
+#reference_dimensions <- dim(tst[[1]])
+#different_dimensions_indices <- integer(0)
+
+#for (i in seq_along(tst)) {
+#  if (any(as.vector(dim(tst[[i]]))!= as.vector(reference_dimensions))==TRUE) {
+#    different_dimensions_indices <- c(different_dimensions_indices, i)
+#  }
+#}
+
+#tst2 <- tst[-c(different_dimensions_indices)]
+
+#actual.sim <- do.call(rbind, tst2)
 ## Choosing series with different added noises (0.01, 0.1, 0.5, 1)
 actual.sim.001 <- actual.sim[actual.sim$Sim == 'sig0.01',]
 actual.sim.01 <- actual.sim[actual.sim$Sim == 'sig0.1',]
