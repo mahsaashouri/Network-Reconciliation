@@ -2,7 +2,7 @@
 
 library(forecast)
 
-Sample4 <-read.csv("Sample2358Most.csv", header = TRUE)[,-1]
+Sample4 <-read.csv("Sample4Most.csv", header = TRUE)[,-1]
 Sample4_wide1 <- Sample4$freq %>%
   matrix(nrow = 64, ncol = nrow(Sample4)/64) %>%
   as.data.frame() %>%
@@ -11,7 +11,7 @@ colnames(Sample4_wide1) <- unique(Sample4$id)
 
 
 ###########################################NoiseFH
-set.seed(123)
+set.seed(234)
 sim <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
   sim[,i] <- simulate(auto.arima(Sample4_wide1[,i]), nsim=64, future = FALSE) 
@@ -68,4 +68,4 @@ colnames(sim1) <- colnames(Sample4_wide1)
 actual.sim.noise.FH <- rbind(cbind(reshape2::melt(sim001), Sim ='sig0.01'), cbind(reshape2::melt(sim01), Sim = 'sig0.1'), 
                              cbind(reshape2::melt(sim05), Sim = 'sig0.5'), cbind(reshape2::melt(sim1), Sim = 'sig1'))
 
-write_csv(actual.sim.noise.FH, 'actual.sim.noise.FH.6Most.csv')
+write_csv(actual.sim.noise.FH, 'actual.sim.noise.FH.3Most.n.csv')
