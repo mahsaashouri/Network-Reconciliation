@@ -41,7 +41,7 @@ smatrix.v2 <- function(data.network) {
     x = numeric(0),
     dims = c(number.row, length(unique(data.network$cat)))
   )
-
+  
   if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
     h <- 1
     # total IN
@@ -68,26 +68,26 @@ smatrix.v2 <- function(data.network) {
   
   # IN series
   if(nrow.in > 0){
-  # Initialize a sparse matrix
-  no.in.series <- length(unique(char.after))
-  s.in <- unique(char.after)
-  unique_cat_after <- sub(".*::", "", unique_cat)
-  smatrix.network.IN <- sparseMatrix(
-    i = numeric(0),
-    j = numeric(0),
-    x = numeric(0),
-    dims = c(nrow.in, length(unique(data.network$cat)))
-  )
-  row_counter <- 1
-  for (i in 1:no.in.series) {
-    if (sum(unique_cat_after %in% s.in[i]) > 1) {
-      smatrix.network.IN[row_counter, ] <- as.integer(unique_cat_after %in% s.in[i])
-      row_counter <- row_counter + 1
+    # Initialize a sparse matrix
+    no.in.series <- length(unique(char.after))
+    s.in <- unique(char.after)
+    unique_cat_after <- sub(".*::", "", unique_cat)
+    smatrix.network.IN <- sparseMatrix(
+      i = numeric(0),
+      j = numeric(0),
+      x = numeric(0),
+      dims = c(nrow.in, length(unique(data.network$cat)))
+    )
+    row_counter <- 1
+    for (i in 1:no.in.series) {
+      if (sum(unique_cat_after %in% s.in[i]) > 1) {
+        smatrix.network.IN[row_counter, ] <- as.integer(unique_cat_after %in% s.in[i])
+        row_counter <- row_counter + 1
+      }
     }
-  }
-  
-
-  smatrix.network[(h+1):(h+nrow.in), ] <- smatrix.network.IN
+    
+    
+    smatrix.network[(h+1):(h+nrow.in), ] <- smatrix.network.IN
   }
   if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
     nrow.out <- 0
@@ -116,11 +116,11 @@ smatrix.v2 <- function(data.network) {
       smatrix.network[(h+nrow.in +1):(h+nrow.in+nrow.out), ] <- smatrix.network.OUT
     }
   }
-   
+  
   # Bottom level series
   smatrix.network[(h + nrow.in + nrow.out + 1):number.row, ] <- sparseMatrix(i = 1:length(unique_cat),
-                                                                                       j = 1:length(unique_cat),
-                                                                                       x = 1,
-                                                                                       dims = c(length(unique_cat), length(unique_cat)))
+                                                                             j = 1:length(unique_cat),
+                                                                             x = 1,
+                                                                             dims = c(length(unique_cat), length(unique_cat)))
   return(smatrix.network)
 }

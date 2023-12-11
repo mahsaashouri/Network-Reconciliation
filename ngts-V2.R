@@ -60,7 +60,7 @@ Aggreg.func.v2 <- function(data.network){
     }
   }
   if (ncol(SumIn) > 0) {
-  colnames(SumIn) <- paste(NameIn, 'in', sep = '.')
+    colnames(SumIn) <- paste(NameIn, 'in', sep = '.')
   }
   if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
     SumOut <- NULL
@@ -96,7 +96,7 @@ Aggreg.func.v2 <- function(data.network){
       colnames(SumOut) <- paste(NameOut, 'out', sep = '.')
     }
   }
- 
+  
   # Bottom level series
   BottomLevel <- Matrix(as.numeric(data.network$series), nrow = nrow(TotalIn), sparse = TRUE)
   colnames(BottomLevel) <- unique(data.network$cat)
