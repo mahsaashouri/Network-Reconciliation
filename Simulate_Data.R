@@ -2,7 +2,7 @@
 
 library(forecast)
 
-Sample4 <-read.csv("Sample4Most.csv", header = TRUE)[,-1]
+Sample4 <-read.csv("Sample3Most.csv", header = TRUE)[,-1]
 Sample4_wide1 <- Sample4$freq %>%
   matrix(nrow = 64, ncol = nrow(Sample4)/64) %>%
   as.data.frame() %>%
@@ -11,7 +11,10 @@ colnames(Sample4_wide1) <- unique(Sample4$id)
 
 
 ###########################################NoiseFH
+## used for the first set
 set.seed(234)
+## used for the second set
+#set.seed(123)
 sim <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
   sim[,i] <- simulate(auto.arima(Sample4_wide1[,i]), nsim=64, future = FALSE) 
