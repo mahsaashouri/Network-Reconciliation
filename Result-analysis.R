@@ -33,10 +33,10 @@ fc.train.ols.unrec <- res.train.ols + res.train.ols
 fc.train.stl.unrec <- res.train.stl[-1,] + res.train.stl[-1,]
 
 ## rec fc - BU
-BU.arima <- read_csv('fc.rec.BU.arima.csv')[,-1]
-BU.ets <- read_csv('fc.rec.BU.ets.csv')[,-1]
-BU.ols <- read_csv('fc.rec.BU.ols.csv')[,-1]
-BU.stl <- read_csv('fc.rec.BU.stl.csv')[,-1]
+BU.arima <- t(read_csv('fc.rec.BU.arima.csv')[,-1])
+BU.ets <- t(read_csv('fc.rec.BU.ets.csv')[,-1])
+BU.ols <- t(read_csv('fc.rec.BU.ols.csv')[,-1])
+BU.stl <- t(read_csv('fc.rec.BU.stl.csv')[,-1])
 
 ## rec fc - BU - res
 res.BU.arima <- net.test - BU.arima
@@ -96,7 +96,11 @@ arima.unrec.melt <- reshape2::melt(arima.unrec)
 ets.unrec.melt <- reshape2::melt(ets.unrec)
 ols.unrec.melt <- reshape2::melt(ols.unrec)
 stl.unrec.melt <- reshape2::melt(stl.unrec)
-
+####
+colnames(BU.arima) <- colnames(net.test)
+colnames(BU.ets) <- colnames(net.test)
+colnames(BU.ols) <- colnames(net.test)
+colnames(BU.stl) <- colnames(net.test)
 BU.arima.melt <- reshape2::melt(BU.arima)
 BU.ets.melt <- reshape2::melt(BU.ets)
 BU.ols.melt <- reshape2::melt(BU.ols)
