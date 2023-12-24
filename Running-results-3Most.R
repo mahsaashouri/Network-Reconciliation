@@ -94,7 +94,7 @@ var.scale <- methods::as(W, "sparseMatrix")
 fc.CG.VAR <- CG(fc.arima, smatrix.net, weights = var.scale)
 write.csv(t(fc.CG.VAR), 'fc.rec.CG.var.arima.csv')
 
-## OLS
+## OLS rec
 fc.CG.null <- CG(fc.arima, smatrix.net, weights = NULL)
 write.csv(t(fc.CG.null), 'fc.rec.CG.null.arima.csv')
 
