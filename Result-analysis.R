@@ -45,52 +45,52 @@ res.BU.ols <- net.test - BU.ols
 res.BU.stl <- net.test - BU.stl
 
 ## rec fc - lambda weight
-CG.lambda.arima <- read_csv('fc.rec.CG.lambda.arima.csv')[,-1]
-CG.lambda.ets <- read_csv('fc.rec.CG.lambda.ets.csv')[,-1]
-CG.lambda.ols <- read_csv('fc.rec.CG.lambda.ols.csv')[,-1]
-CG.lambda.stl <- read_csv('fc.rec.CG.lambda.stl.csv')[,-1]
+CG.WLS.S.arima <- read_csv('fc.rec.CG.lambda.arima.csv')[,-1]
+CG.WLS.S.ets <- read_csv('fc.rec.CG.lambda.ets.csv')[,-1]
+CG.WLS.S.ols <- read_csv('fc.rec.CG.lambda.ols.csv')[,-1]
+CG.WLS.S.stl <- read_csv('fc.rec.CG.lambda.stl.csv')[,-1]
 
 ## rec fc - lambda weight - res
-res.CG.lambda.arima <- net.test - CG.lambda.arima
-res.CG.lambda.ets <- net.test - CG.lambda.ets
-res.CG.lambda.ols <- net.test - CG.lambda.ols
-res.CG.lambda.stl <- net.test - CG.lambda.stl
+res.CG.WLS.S.arima <- net.test - CG.WLS.S.arima
+res.CG.WLS.S.ets <- net.test - CG.WLS.S.ets
+res.CG.WLS.S.ols <- net.test - CG.WLS.S.ols
+res.CG.WLS.S.stl <- net.test - CG.WLS.S.stl
 
 ## rec fc - var weight
-CG.var.arima <- read_csv('fc.rec.CG.var.arima.csv')[,-1]
-CG.var.ets <- read_csv('fc.rec.CG.var.ets.csv')[,-1]
-CG.var.ols <- read_csv('fc.rec.CG.var.ols.csv')[,-1]
-CG.var.stl <- read_csv('fc.rec.CG.var.stl.csv')[,-1]
+CG.WLS.V.arima <- read_csv('fc.rec.CG.var.arima.csv')[,-1]
+CG.WLS.V.ets <- read_csv('fc.rec.CG.var.ets.csv')[,-1]
+CG.WLS.V.ols <- read_csv('fc.rec.CG.var.ols.csv')[,-1]
+CG.WLS.V.stl <- read_csv('fc.rec.CG.var.stl.csv')[,-1]
 
 ## rec fc - var weight - res
-res.CG.var.arima <- net.test - CG.var.arima
-res.CG.var.ets <- net.test - CG.var.ets
-res.CG.var.ols <- net.test - CG.var.ols
-res.CG.var.stl <- net.test - CG.var.stl
+res.CG.WLS.V.arima <- net.test - CG.WLS.V.arima
+res.CG.WLS.V.ets <- net.test - CG.WLS.V.ets
+res.CG.WLS.V.ols <- net.test - CG.WLS.V.ols
+res.CG.WLS.V.stl <- net.test - CG.WLS.V.stl
 
 ## rec fc - shrink weight
-rec.CG.shrink.arima <- read_csv('fc.rec.CG.shrink.arima.csv')[,-1]
-rec.CG.shrink.ets <- read_csv('fc.rec.CG.shrink.ets.csv')[,-1]
-rec.CG.shrink.ols <- read_csv('fc.rec.CG.shrink.ols.csv')[,-1]
-rec.CG.shrink.stl <- read_csv('fc.rec.CG.shrink.stl.csv')[,-1]
+rec.CG.MinT.arima <- read_csv('fc.rec.CG.shrink.arima.csv')[,-1]
+rec.CG.MinT.ets <- read_csv('fc.rec.CG.shrink.ets.csv')[,-1]
+rec.CG.MinT.ols <- read_csv('fc.rec.CG.shrink.ols.csv')[,-1]
+rec.CG.MinT.stl <- read_csv('fc.rec.CG.shrink.stl.csv')[,-1]
 
 ## rec fc - shrink weight - res
-res.rec.CG.shrink.arima <- net.test - rec.CG.shrink.arima
-res.rec.CG.shrink.ets <- net.test - rec.CG.shrink.ets
-res.rec.CG.shrink.ols <- net.test - rec.CG.shrink.ols
-res.rec.CG.shrink.stl <- net.test - rec.CG.shrink.stl
+res.rec.CG.MinT.arima <- net.test - rec.CG.MinT.arima
+res.rec.CG.MinT.ets <- net.test - rec.CG.MinT.ets
+res.rec.CG.MinT.ols <- net.test - rec.CG.MinT.ols
+res.rec.CG.MinT.stl <- net.test - rec.CG.MinT.stl
 
 ## rec fc - null weight
-rec.CG.null.arima <- read_csv('fc.rec.CG.null.arima.csv')[,-1]
-rec.CG.null.ets <- read_csv('fc.rec.CG.null.ets.csv')[,-1]
-rec.CG.null.ols <- read_csv('fc.rec.CG.null.ols.csv')[,-1]
-rec.CG.null.stl <- read_csv('fc.rec.CG.null.stl.csv')[,-1]
+rec.CG.OLS.arima <- read_csv('fc.rec.CG.null.arima.csv')[,-1]
+rec.CG.OLS.ets <- read_csv('fc.rec.CG.null.ets.csv')[,-1]
+rec.CG.OLS.ols <- read_csv('fc.rec.CG.null.ols.csv')[,-1]
+rec.CG.OLS.stl <- read_csv('fc.rec.CG.null.stl.csv')[,-1]
 
 
-res.rec.CG.null.arima <- net.test - rec.CG.null.arima
-res.rec.CG.null.ets <- net.test - rec.CG.null.ets
-res.rec.CG.null.ols <- net.test - rec.CG.null.ols
-res.rec.CG.null.stl <- net.test - rec.CG.null.stl
+res.rec.CG.OLS.arima <- net.test - rec.CG.OLS.arima
+res.rec.CG.OLS.ets <- net.test - rec.CG.OLS.ets
+res.rec.CG.OLS.ols <- net.test - rec.CG.OLS.ols
+res.rec.CG.OLS.stl <- net.test - rec.CG.OLS.stl
 
 arima.unrec.melt <- reshape2::melt(arima.unrec)
 ets.unrec.melt <- reshape2::melt(ets.unrec)
@@ -106,25 +106,25 @@ BU.ets.melt <- reshape2::melt(BU.ets)
 BU.ols.melt <- reshape2::melt(BU.ols)
 BU.stl.melt <- reshape2::melt(BU.stl)
 
-CG.lambda.arima.melt <- reshape2::melt(CG.lambda.arima)
-CG.lambda.ets.melt <- reshape2::melt(CG.lambda.ets)
-CG.lambda.ols.melt <- reshape2::melt(CG.lambda.ols)
-CG.lambda.stl.melt <- reshape2::melt(CG.lambda.stl)
+CG.WLS.S.arima.melt <- reshape2::melt(CG.WLS.S.arima)
+CG.WLS.S.ets.melt <- reshape2::melt(CG.WLS.S.ets)
+CG.WLS.S.ols.melt <- reshape2::melt(CG.WLS.S.ols)
+CG.WLS.S.stl.melt <- reshape2::melt(CG.WLS.S.stl)
 
-CG.var.arima.melt <- reshape2::melt(CG.var.arima)
-CG.var.ets.melt <- reshape2::melt(CG.var.ets)
-CG.var.ols.melt <- reshape2::melt(CG.var.ols)
-CG.var.stl.melt <- reshape2::melt(CG.var.stl)
+CG.WLS.V.arima.melt <- reshape2::melt(CG.WLS.V.arima)
+CG.WLS.V.ets.melt <- reshape2::melt(CG.WLS.V.ets)
+CG.WLS.V.ols.melt <- reshape2::melt(CG.WLS.V.ols)
+CG.WLS.V.stl.melt <- reshape2::melt(CG.WLS.V.stl)
 
-rec.CG.shrink.arima.melt <- reshape2::melt(rec.CG.shrink.arima)
-rec.CG.shrink.ets.melt <- reshape2::melt(rec.CG.shrink.ets)
-rec.CG.shrink.ols.melt <- reshape2::melt(rec.CG.shrink.ols)
-rec.CG.shrink.stl.melt <- reshape2::melt(rec.CG.shrink.stl)
+rec.CG.MinT.arima.melt <- reshape2::melt(rec.CG.MinT.arima)
+rec.CG.MinT.ets.melt <- reshape2::melt(rec.CG.MinT.ets)
+rec.CG.MinT.ols.melt <- reshape2::melt(rec.CG.MinT.ols)
+rec.CG.MinT.stl.melt <- reshape2::melt(rec.CG.MinT.stl)
 
-rec.CG.null.arima.melt <- reshape2::melt(rec.CG.null.arima)
-rec.CG.null.ets.melt <- reshape2::melt(rec.CG.null.ets)
-rec.CG.null.ols.melt <- reshape2::melt(rec.CG.null.ols)
-rec.CG.null.stl.melt <- reshape2::melt(rec.CG.null.stl)
+rec.CG.OLS.arima.melt <- reshape2::melt(rec.CG.OLS.arima)
+rec.CG.OLS.ets.melt <- reshape2::melt(rec.CG.OLS.ets)
+rec.CG.OLS.ols.melt <- reshape2::melt(rec.CG.OLS.ols)
+rec.CG.OLS.stl.melt <- reshape2::melt(rec.CG.OLS.stl)
 
 res.arima.unrec.melt <- reshape2::melt(res.arima.unrec)
 res.ets.unrec.melt <- reshape2::melt(res.ets.unrec)
@@ -136,25 +136,25 @@ res.BU.ets.melt <- reshape2::melt(res.BU.ets)
 res.BU.ols.melt <- reshape2::melt(res.BU.ols)
 res.BU.stl.melt <- reshape2::melt(res.BU.stl)
 
-res.CG.lambda.arima.melt <- reshape2::melt(res.CG.lambda.arima)
-res.CG.lambda.ets.melt <- reshape2::melt(res.CG.lambda.ets)
-res.CG.lambda.ols.melt <- reshape2::melt(res.CG.lambda.ols)
-res.CG.lambda.stl.melt <- reshape2::melt(res.CG.lambda.stl)
+res.CG.WLS.S.arima.melt <- reshape2::melt(res.CG.WLS.S.arima)
+res.CG.WLS.S.ets.melt <- reshape2::melt(res.CG.WLS.S.ets)
+res.CG.WLS.S.ols.melt <- reshape2::melt(res.CG.WLS.S.ols)
+res.CG.WLS.S.stl.melt <- reshape2::melt(res.CG.WLS.S.stl)
 
-res.CG.var.arima.melt <- reshape2::melt(res.CG.var.arima)
-res.CG.var.ets.melt <- reshape2::melt(res.CG.var.ets)
-res.CG.var.ols.melt <- reshape2::melt(res.CG.var.ols)
-res.CG.var.stl.melt <- reshape2::melt(res.CG.var.stl)
+res.CG.WLS.V.arima.melt <- reshape2::melt(res.CG.WLS.V.arima)
+res.CG.WLS.V.ets.melt <- reshape2::melt(res.CG.WLS.V.ets)
+res.CG.WLS.V.ols.melt <- reshape2::melt(res.CG.WLS.V.ols)
+res.CG.WLS.V.stl.melt <- reshape2::melt(res.CG.WLS.V.stl)
 
-res.rec.CG.shrink.arima.melt <- reshape2::melt(res.rec.CG.shrink.arima)
-res.rec.CG.shrink.ets.melt <- reshape2::melt(res.rec.CG.shrink.ets)
-res.rec.CG.shrink.ols.melt <- reshape2::melt(res.rec.CG.shrink.ols)
-res.rec.CG.shrink.stl.melt <- reshape2::melt(res.rec.CG.shrink.stl)
+res.rec.CG.MinT.arima.melt <- reshape2::melt(res.rec.CG.MinT.arima)
+res.rec.CG.MinT.ets.melt <- reshape2::melt(res.rec.CG.MinT.ets)
+res.rec.CG.MinT.ols.melt <- reshape2::melt(res.rec.CG.MinT.ols)
+res.rec.CG.MinT.stl.melt <- reshape2::melt(res.rec.CG.MinT.stl)
 
-res.rec.CG.null.arima.melt <- reshape2::melt(res.rec.CG.null.arima)
-res.rec.CG.null.ets.melt <- reshape2::melt(res.rec.CG.null.ets)
-res.rec.CG.null.ols.melt <- reshape2::melt(res.rec.CG.null.ols)
-res.rec.CG.null.stl.melt <- reshape2::melt(res.rec.CG.null.stl)
+res.rec.CG.OLS.arima.melt <- reshape2::melt(res.rec.CG.OLS.arima)
+res.rec.CG.OLS.ets.melt <- reshape2::melt(res.rec.CG.OLS.ets)
+res.rec.CG.OLS.ols.melt <- reshape2::melt(res.rec.CG.OLS.ols)
+res.rec.CG.OLS.stl.melt <- reshape2::melt(res.rec.CG.OLS.stl)
 
 net.test.melt <- reshape2::melt(net.test)
 
@@ -182,56 +182,56 @@ fc.all <- bind_rows(bind_cols('fc' = arima.unrec.melt$value, 'error' = res.arima
                 bind_cols('fc' = BU.stl.melt$value, 'error' = res.BU.stl.melt$value,  
                 'Method' = rep('stl', nrow(BU.stl.melt)),
                 'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.BU'),
-                bind_cols('fc' = CG.lambda.arima.melt$value, 'error' = res.CG.lambda.arima.melt$value,  
-                'Method' = rep('arima', nrow(CG.lambda.arima.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.lambda'), 
-                bind_cols('fc' = CG.lambda.ets.melt$value, 'error' = res.CG.lambda.ets.melt$value,  
-                'Method' = rep('ets', nrow(CG.lambda.ets.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.lambda'), 
-                bind_cols('fc' = CG.lambda.ols.melt$value, 'error' = res.CG.lambda.ols.melt$value,  
-                'Method' = rep('ols', nrow(CG.lambda.ols.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.lambda'), 
-                bind_cols('fc' = CG.lambda.stl.melt$value, 'error' = res.CG.lambda.stl.melt$value,  
-                'Method' = rep('stl', nrow(CG.lambda.stl.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.lambda'),
-                bind_cols('fc' = CG.var.arima.melt$value, 'error' = res.CG.var.arima.melt$value,  
-                'Method' = rep('arima', nrow(CG.var.arima.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.var'), 
-                bind_cols('fc' = CG.var.ets.melt$value, 'error' = res.CG.var.ets.melt$value,  
-                'Method' = rep('ets', nrow(CG.var.ets.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.var'), 
-                bind_cols('fc' = CG.var.ols.melt$value, 'error' = res.CG.var.ols.melt$value,  
-                'Method' = rep('ols', nrow(CG.var.ols.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.var'), 
-                bind_cols('fc' = CG.var.stl.melt$value, 'error' = res.CG.var.stl.melt$value,  
-                'Method' = rep('stl', nrow(CG.var.stl.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.var'),
-                bind_cols('fc' = rec.CG.shrink.arima.melt$value, 'error' = res.rec.CG.shrink.arima.melt$value,  
-                'Method' = rep('arima', nrow(rec.CG.shrink.arima.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.shrink'), 
-                bind_cols('fc' = rec.CG.shrink.ets.melt$value, 'error' = res.rec.CG.shrink.ets.melt$value,  
-                'Method' = rep('ets', nrow(rec.CG.shrink.ets.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.shrink'),
-                bind_cols('fc' = rec.CG.shrink.ols.melt$value, 'error' = res.rec.CG.shrink.ols.melt$value,  
-                'Method' = rep('ols', nrow(rec.CG.shrink.ols.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.shrink'),
-                bind_cols('fc' = rec.CG.shrink.stl.melt$value, 'error' = res.rec.CG.shrink.stl.melt$value,  
-                'Method' = rep('stl', nrow(rec.CG.shrink.stl.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.shrink'),
-                bind_cols('fc' = rec.CG.null.arima.melt$value, 'error' = res.rec.CG.null.arima.melt$value,  
-                'Method' = rep('arima', nrow(rec.CG.null.arima.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.null'), 
-                bind_cols('fc' = rec.CG.null.ets.melt$value, 'error' = res.rec.CG.null.ets.melt$value,  
-                'Method' = rep('ets', nrow(rec.CG.null.ets.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.null'),
-                bind_cols('fc' = rec.CG.null.ols.melt$value, 'error' = res.rec.CG.null.ols.melt$value,  
-                'Method' = rep('ols', nrow(rec.CG.null.ols.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.null'),
-                bind_cols('fc' = rec.CG.null.stl.melt$value, 'error' = res.rec.CG.null.stl.melt$value,  
-                'Method' = rep('stl', nrow(rec.CG.null.stl.melt)),
-                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.null'),
+                bind_cols('fc' = CG.WLS.S.arima.melt$value, 'error' = res.CG.WLS.S.arima.melt$value,  
+                'Method' = rep('arima', nrow(CG.WLS.S.arima.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.WLS.S'), 
+                bind_cols('fc' = CG.WLS.S.ets.melt$value, 'error' = res.CG.WLS.S.ets.melt$value,  
+                'Method' = rep('ets', nrow(CG.WLS.S.ets.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.WLS.S'), 
+                bind_cols('fc' = CG.WLS.S.ols.melt$value, 'error' = res.CG.WLS.S.ols.melt$value,  
+                'Method' = rep('ols', nrow(CG.WLS.S.ols.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.WLS.S'), 
+                bind_cols('fc' = CG.WLS.S.stl.melt$value, 'error' = res.CG.WLS.S.stl.melt$value,  
+                'Method' = rep('stl', nrow(CG.WLS.S.stl.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.WLS.S'),
+                bind_cols('fc' = CG.WLS.V.arima.melt$value, 'error' = res.CG.WLS.V.arima.melt$value,  
+                'Method' = rep('arima', nrow(CG.WLS.V.arima.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.WLS.V'), 
+                bind_cols('fc' = CG.WLS.V.ets.melt$value, 'error' = res.CG.WLS.V.ets.melt$value,  
+                'Method' = rep('ets', nrow(CG.WLS.V.ets.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.WLS.V'), 
+                bind_cols('fc' = CG.WLS.V.ols.melt$value, 'error' = res.CG.WLS.V.ols.melt$value,  
+                'Method' = rep('ols', nrow(CG.WLS.V.ols.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.WLS.V'), 
+                bind_cols('fc' = CG.WLS.V.stl.melt$value, 'error' = res.CG.WLS.V.stl.melt$value,  
+                'Method' = rep('stl', nrow(CG.WLS.V.stl.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.WLS.V'),
+                bind_cols('fc' = rec.CG.MinT.arima.melt$value, 'error' = res.rec.CG.MinT.arima.melt$value,  
+                'Method' = rep('arima', nrow(rec.CG.MinT.arima.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.MinT'), 
+                bind_cols('fc' = rec.CG.MinT.ets.melt$value, 'error' = res.rec.CG.MinT.ets.melt$value,  
+                'Method' = rep('ets', nrow(rec.CG.MinT.ets.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.MinT'),
+                bind_cols('fc' = rec.CG.MinT.ols.melt$value, 'error' = res.rec.CG.MinT.ols.melt$value,  
+                'Method' = rep('ols', nrow(rec.CG.MinT.ols.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.MinT'),
+                bind_cols('fc' = rec.CG.MinT.stl.melt$value, 'error' = res.rec.CG.MinT.stl.melt$value,  
+                'Method' = rep('stl', nrow(rec.CG.MinT.stl.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.MinT'),
+                bind_cols('fc' = rec.CG.OLS.arima.melt$value, 'error' = res.rec.CG.OLS.arima.melt$value,  
+                'Method' = rep('arima', nrow(rec.CG.OLS.arima.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.OLS'), 
+                bind_cols('fc' = rec.CG.OLS.ets.melt$value, 'error' = res.rec.CG.OLS.ets.melt$value,  
+                'Method' = rep('ets', nrow(rec.CG.OLS.ets.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.OLS'),
+                bind_cols('fc' = rec.CG.OLS.ols.melt$value, 'error' = res.rec.CG.OLS.ols.melt$value,  
+                'Method' = rep('ols', nrow(rec.CG.OLS.ols.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.OLS'),
+                bind_cols('fc' = rec.CG.OLS.stl.melt$value, 'error' = res.rec.CG.OLS.stl.melt$value,  
+                'Method' = rep('stl', nrow(rec.CG.OLS.stl.melt)),
+                'Series' = arima.unrec.melt$variable, 'Rec' = 'rec.OLS'),
                 bind_cols('fc' = net.test.melt$value, 'error' = 0,
-                'Method' = rep('actual', nrow(rec.CG.shrink.ols.melt)),
+                'Method' = rep('actual', nrow(rec.CG.MinT.ols.melt)),
                 'Series' = arima.unrec.melt$variable, 'Rec' = 'actual')
                 )
 
@@ -287,21 +287,21 @@ create_plot <- function(method, ylim, series) {
         actual = "black",
         unrec = "pink",
         rec.BU = "green",
-        rec.null = "blue",
-        rec.lambda = "red",
-        rec.var = "darkorchid",
-        rec.shrink = "cyan"
+        rec.OLS = "blue",
+        rec.WLS.S = "red",
+        rec.WLS.V = "darkorchid",
+        rec.MinT = "cyan"
       )) +
     theme_bw() +
     theme(legend.position = "none", 
-          axis.text = element_text(size = 15), 
+          axis.text = element_text(size = 20), 
           axis.title = element_text(size = 20),  
           plot.title = element_text(size = 25),
-          legend.title = element_text(size = 18))  
+          legend.title = element_text(size = 20))  
 }
 
 # Define the methods and series
-methods <- c("arima", "ets", "ols", "stl")
+methods <- c("arima", "ets", "stl", "ols")
 #series <- "United_States.out"
 series <- "Total.out"
 #series <- "United_States.in"
@@ -317,7 +317,7 @@ combined_plot <- wrap_plots(plots, ncol = 2, guides = "collect")
 
 # Manually create a legend for the combined plot
 legend <- get_legend(plots[[2]])  # Use the legend from the first plot
-combined_plot <- combined_plot + theme(legend.position = c(0.5, 0.02)) + theme(legend.text = element_text(size = 15))
+combined_plot <- combined_plot + theme(legend.position = c(0.5, 0.02)) + theme(legend.text = element_text(size = 20))
 
 # Display the combined plot with a shared legend
 print(combined_plot)
@@ -338,18 +338,18 @@ error.all <- fc.all %>%
   #filter(Rec != "rec.lambda" & Method !="actual") %>%
   filter(Method !="actual") %>%
   mutate(id = factor(paste(Method, Rec, sep = "."),
-                     levels = c("ets.rec.shrink", "ets.rec.null", "ets.rec.lambda", "ets.unrec", 
-                                "arima.rec.shrink", "arima.rec.null","arima.rec.lambda","arima.unrec", 
-                                "ols.rec.shrink", "ols.rec.null","ols.rec.lambda","ols.unrec", 
-                                "stl.rec.shrink", "stl.rec.null","stl.rec.lambda","stl.unrec"),
-                     labels = c("ets.rec.shrink", "ets.rec.null", "ets.rec.lambda", "ets.unrec", 
-                                "arima.rec.shrink", "arima.rec.null","arima.rec.lambda","arima.unrec", 
-                                "ols.rec.shrink", "ols.rec.null","ols.rec.lambda","ols.unrec", 
-                                "stl.rec.shrink", "stl.rec.null","stl.rec.lambda","stl.unrec")))
-                     #levels = c("ets.rec.shrink",  "ets.unrec", "arima.rec.shrink","arima.unrec", 
-                      #                    "ols.rec.shrink","ols.unrec"),
-                     #labels = c("ets.rec.shrink",  "ets.unrec", "arima.rec.shrink", "arima.unrec", 
-                      #                  "ols.rec.shrink", "ols.unrec")))
+                     levels = c("ets.rec.MinT", "ets.rec.OLS", "ets.rec.WLS.S", "ets.unrec", 
+                                "arima.rec.MinT", "arima.rec.OLS","arima.rec.WLS.S","arima.unrec", 
+                                "ols.rec.MinT", "ols.rec.OLS","ols.rec.WLS.S","ols.unrec", 
+                                "stl.rec.MinT", "stl.rec.OLS","stl.rec.WLS.S","stl.unrec"),
+                     labels = c("ets.rec.MinT", "ets.rec.OLS", "ets.rec.WLS.S", "ets.unrec", 
+                                "arima.rec.MinT", "arima.rec.OLS","arima.rec.WLS.S","arima.unrec", 
+                                "ols.rec.MinT", "ols.rec.OLS","ols.rec.WLS.S","ols.unrec", 
+                                "stl.rec.MinT", "stl.rec.OLS","stl.rec.WLS.S","stl.unrec")))
+                     #levels = c("ets.rec.MinT",  "ets.unrec", "arima.rec.MinT","arima.unrec", 
+                      #                    "ols.rec.MinT","ols.unrec"),
+                     #labels = c("ets.rec.MinT",  "ets.unrec", "arima.rec.MinT", "arima.unrec", 
+                      #                  "ols.rec.MinT", "ols.unrec")))
 
 filtered_data <- error.all %>%
   filter(Level != "Outer" & Level != "Total.in"& Level != "Total.out" )
@@ -384,14 +384,14 @@ error.all.total <- fc.all %>%
   #filter(Rec != "rec.lambda" & Method !="actual") %>%
   filter(Method !="actual") %>%
   mutate(id = factor(paste(Method, Rec, sep = "."),
-                     levels = c("ets.rec.shrink", "ets.rec.null", "ets.rec.lambda", "ets.unrec", 
-                                "arima.rec.shrink", "arima.rec.null","arima.rec.lambda","arima.unrec", 
-                                "ols.rec.shrink", "ols.rec.null","ols.rec.lambda","ols.unrec", 
-                                "stl.rec.shrink", "stl.rec.null","stl.rec.lambda","stl.unrec"),
-                     labels = c("ets.rec.shrink", "ets.rec.null", "ets.rec.lambda", "ets.unrec", 
-                                "arima.rec.shrink", "arima.rec.null","arima.rec.lambda","arima.unrec", 
-                                "ols.rec.shrink", "ols.rec.null","ols.rec.lambda","ols.unrec", 
-                                "stl.rec.shrink", "stl.rec.null","stl.rec.lambda","stl.unrec")))
+                     levels = c("ets.rec.MinT", "ets.rec.OLS", "ets.rec.WLS.S", "ets.unrec", 
+                                "arima.rec.MinT", "arima.rec.OLS","arima.rec.WLS.S","arima.unrec", 
+                                "ols.rec.MinT", "ols.rec.OLS","ols.rec.WLS.S","ols.unrec", 
+                                "stl.rec.MinT", "stl.rec.OLS","stl.rec.WLS.S","stl.unrec"),
+                     labels = c("ets.rec.MinT", "ets.rec.OLS", "ets.rec.WLS.S", "ets.unrec", 
+                                "arima.rec.MinT", "arima.rec.OLS","arima.rec.WLS.S","arima.unrec", 
+                                "ols.rec.MinT", "ols.rec.OLS","ols.rec.WLS.S","ols.unrec", 
+                                "stl.rec.MinT", "stl.rec.OLS","stl.rec.WLS.S","stl.unrec")))
 
 ggplot(error.all.total, aes(x = id, y = error/100000, fill = id)) +
   geom_boxplot() +
