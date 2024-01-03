@@ -264,6 +264,69 @@ rmse_results <- fc.all %>%
   group_by(Level, Rec, Method) %>%
   summarise(rmse = sqrt(mean(error^2)))
 
+###### Plot series by different reconciliation methods
+
+
+library(dplyr)
+library(patchwork)
+
+# Define a function to create the plot for a specific method
+create_plot <- function(method, ylim, series) {
+  fc.all %>%
+    filter(Method %in% c(method, "actual"), Series == series) %>%
+    ggplot(aes(x = id, y = fc, colour = Rec)) +
+    geom_line(size = 1) +
+    xlab("Horizon") +
+    ylab("Count") +
+    ggtitle(method) +
+    scale_color_manual(
+      name = "Reconciled",
+      values = c(
+        actual = "black",
+        unrec = "pink",
+        rec.BU = "green",
+        rec.null = "blue",
+        rec.lambda = "red",
+        rec.var = "darkorchid",
+        rec.shrink = "cyan"
+      )) +
+    theme_bw() +
+    theme(legend.position = "none", 
+          axis.text = element_text(size = 15), 
+          axis.title = element_text(size = 20),  
+          plot.title = element_text(size = 25),
+          legend.title = element_text(size = 18))  
+}
+
+# Define the methods and series
+methods <- c("arima", "ets", "ols", "stl")
+#series <- "United_States.out"
+series <- "Total.out"
+#series <- "United_States.in"
+#series <- "World_War_II.out"
+#series <- "Guyana.in"
+#series <- "John_F._Kennedy.in"
+series <- "Blake_Lively.in"
+# Create a list of plots for each method
+plots <- lapply(methods, function(method) create_plot(method, range(fc.all %>% filter(Method == "actual", Series == series) %>% pull(fc)), series))
+
+# Combine the plots with a shared legend
+combined_plot <- wrap_plots(plots, ncol = 2, guides = "collect")
+
+# Manually create a legend for the combined plot
+legend <- get_legend(plots[[2]])  # Use the legend from the first plot
+combined_plot <- combined_plot + theme(legend.position = c(0.5, 0.02)) + theme(legend.text = element_text(size = 15))
+
+# Display the combined plot with a shared legend
+print(combined_plot)
+
+
+
+
+
+
+
+
 library(tidyverse)
 
 # Reshape the data to long format for plotting
