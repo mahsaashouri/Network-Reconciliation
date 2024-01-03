@@ -271,10 +271,12 @@ library(dplyr)
 library(patchwork)
 
 # Define a function to create the plot for a specific method
+
+## for total series we divide the fc by 10000 - for the other only use fc
 create_plot <- function(method, ylim, series) {
   fc.all %>%
     filter(Method %in% c(method, "actual"), Series == series) %>%
-    ggplot(aes(x = id, y = fc, colour = Rec)) +
+    ggplot(aes(x = id, y = fc/10000, colour = Rec)) +
     geom_line(size = 1) +
     xlab("Horizon") +
     ylab("Count") +
