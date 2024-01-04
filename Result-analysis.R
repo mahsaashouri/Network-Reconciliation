@@ -304,11 +304,12 @@ create_plot <- function(method, ylim, series) {
 methods <- c("arima", "ets", "stl", "ols")
 #series <- "United_States.out"
 series <- "Total.out"
+series <- "Blake_Lively.in"
 #series <- "United_States.in"
 #series <- "World_War_II.out"
 #series <- "Guyana.in"
 #series <- "John_F._Kennedy.in"
-series <- "Blake_Lively.in"
+
 # Create a list of plots for each method
 plots <- lapply(methods, function(method) create_plot(method, range(fc.all %>% filter(Method == "actual", Series == series) %>% pull(fc)), series))
 
