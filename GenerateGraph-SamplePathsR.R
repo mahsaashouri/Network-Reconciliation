@@ -7,11 +7,11 @@ generate_random_paths <- function(g, source_node, nodes, n_paths) {
     while (is.null(path) || length(path) != 2) {
       if (runif(1) < 0.7) {
         # Start from the source node
-        path <- random_walk(g, start = source_node, steps = 2, mode = "out")
+        path <- random_walk(g, start = source_node, steps = 1, mode = "out")
       } else {
         # Start from a randomly selected node (excluding the source node)
         v <- sample(nodes, size = 1)
-        path <- random_walk(g, start = v, steps = 2, mode = "out")
+        path <- random_walk(g, start = v, steps = 1, mode = "out")
       }
     }
     path
@@ -20,7 +20,7 @@ generate_random_paths <- function(g, source_node, nodes, n_paths) {
 }
 
 # Create a simple directed graph with one edge between each pair of nodes (no self-loops)
-n <- 100
+n <- 1000
 nodes <- 1:n
 edges <- data.frame(from = sample(nodes, size = 2*n, replace = TRUE),
                     to = sample(nodes, size = 2*n, replace = TRUE))
@@ -33,12 +33,12 @@ source_node <- max(V(g)) + 1
 g <- add_vertices(g, nv = 1, name = "other")
 
 # Connect the source node to selected existing nodes with directed edges
-target_nodes <- sample(nodes, size = n/2)  # Choose 5 random nodes to connect to
+target_nodes <- sample(1:max(V(g)), size = n/2, replace = FALSE)  # Choose half random nodes to connect to
 for (target_node in target_nodes) {
   g <- add_edges(g, c(source_node, target_node))
 }
 
-# Let's create data frames for each month
+# Create data frames for each month
 start_date <- as.Date("2012-01-01")  # Start date
 end_date <- as.Date("2024-01-01")    # End date
 dates <- seq(start_date, end_date, by = "month")  # Monthly dates
@@ -48,7 +48,7 @@ dates <- seq(start_date, end_date, by = "month")  # Monthly dates
 path_df_list <- list()
 # Loop over each month
 for (i in seq_along(dates)) {
-  random_paths <- generate_random_paths(g, source_node, nodes, 200)
+  random_paths <- generate_random_paths(g, source_node, 1:max(V(g)), 2000)
   random_paths_names <- c(names(unlist( random_paths)))
   # Combine elements two by two
   combined_pairs <- paste(random_paths_names[seq(1, length(random_paths_names), by = 2)], random_paths_names[seq(2, length(random_paths_names), by = 2)], sep = "::")
