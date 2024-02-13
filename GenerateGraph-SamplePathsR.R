@@ -1,6 +1,23 @@
 
-
 library(igraph)
+
+generate_random_paths <- function(g, source_node, nodes, n_paths) {
+  random_paths <- lapply(1:n_paths, function(v) {
+    path <- NULL
+    while (is.null(path) || length(path) != 2) {
+      if (runif(1) < 0.7) {
+        # Start from the source node
+        path <- random_walk(g, start = source_node, steps = 2, mode = "out")
+      } else {
+        # Start from a randomly selected node (excluding the source node)
+        v <- sample(nodes, size = 1)
+        path <- random_walk(g, start = v, steps = 2, mode = "out")
+      }
+    }
+    path
+  })
+  random_paths
+}
 
 # Create a simple directed graph with one edge between each pair of nodes (no self-loops)
 n <- 100
@@ -20,21 +37,49 @@ target_nodes <- sample(nodes, size = n/2)  # Choose 5 random nodes to connect to
 for (target_node in target_nodes) {
   g <- add_edges(g, c(source_node, target_node))
 }
-plot(g, edge.arrow.size=0.5)
-# Simulate random paths from selected nodes (excluding the source node)
-random_paths <- lapply(1:100, function(v) {
-  if (runif(1) < 0.7) {
-    # Start from the source node
-    random_walk(g, start = source_node, steps  = 1, mode = "out")
-  } else {
-    # Start from a randomly selected node (excluding the source node)
-    v <- sample(nodes, size = 1)
-    random_walk(g, start = v, steps  = 1, mode = "out")
-  }
-})
 
-# Count similar random paths and create a dataframe
-path_counts <- table(sapply(random_paths, function(path) paste(path, collapse = ":")))
-path_df <- data.frame(path = names(path_counts), frequency = as.numeric(path_counts))
+# Let's create data frames for each month
+start_date <- as.Date("2012-01-01")  # Start date
+end_date <- as.Date("2024-01-01")    # End date
+dates <- seq(start_date, end_date, by = "month")  # Monthly dates
 
+# Initialize a list to store data frames for each month
 
+path_df_list <- list()
+# Loop over each month
+for (i in seq_along(dates)) {
+  random_paths <- generate_random_paths(g, source_node, nodes, 200)
+  random_paths_names <- c(names(unlist( random_paths)))
+  # Combine elements two by two
+  combined_pairs <- paste(random_paths_names[seq(1, length(random_paths_names), by = 2)], random_paths_names[seq(2, length(random_paths_names), by = 2)], sep = "::")
+  # Count the combined pairs
+  path_counts <-table(combined_pairs)
+  path_df <- data.frame(path = names(path_counts), frequency = as.numeric(path_counts))
+  # Add the date column
+  path_df$date <- dates[i]
+  # Append the path_df dataframe to the list
+  path_df_list[[i]] <- path_df
+}
+
+# Stack the data frames for each month into one large data frame
+combined_df <- do.call(rbind, path_df_list)
+# Load required libraries
+library(tidyr)
+library(dplyr)
+
+# Convert 'date' column to Date type
+combined_df$date <- as.Date(combined_df$date)
+
+# Create a full combination of paths and dates
+full_combination <- expand.grid(path = unique(combined_df$path), 
+                                date = seq(min(combined_df$date), max(combined_df$date), by = "month"))
+
+# Merge the full combination with the original dataset
+complete_df <- full_combination %>%
+  left_join(combined_df, by = c("path", "date")) %>%
+  mutate(frequency = ifelse(is.na(frequency), 0, frequency))%>% # Replace missing values with 0
+  arrange(path) # Order by path ID
+# Replace missing values with 0
+
+# Print the first few rows of the completed dataset
+head(complete_df)
