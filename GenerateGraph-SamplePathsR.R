@@ -1,6 +1,6 @@
 
 library(igraph)
-
+set.seed(123)
 generate_random_paths <- function(g, source_node, nodes, n_paths) {
   random_paths <- lapply(1:n_paths, function(v) {
     path <- NULL
@@ -20,7 +20,7 @@ generate_random_paths <- function(g, source_node, nodes, n_paths) {
 }
 
 # Create a simple directed graph with one edge between each pair of nodes (no self-loops)
-n <- 1000
+n <- 100000
 nodes <- 1:n
 edges <- data.frame(from = sample(nodes, size = 2*n, replace = TRUE),
                     to = sample(nodes, size = 2*n, replace = TRUE))
@@ -48,7 +48,7 @@ dates <- seq(start_date, end_date, by = "month")  # Monthly dates
 path_df_list <- list()
 # Loop over each month
 for (i in seq_along(dates)) {
-  random_paths <- generate_random_paths(g, source_node, 1:max(V(g)), 2000)
+  random_paths <- generate_random_paths(g, source_node, 1:max(V(g)), 200000)
   random_paths_names <- c(names(unlist( random_paths)))
   # Combine elements two by two
   combined_pairs <- paste(random_paths_names[seq(1, length(random_paths_names), by = 2)], random_paths_names[seq(2, length(random_paths_names), by = 2)], sep = "::")
@@ -79,7 +79,11 @@ complete_df <- full_combination %>%
   left_join(combined_df, by = c("path", "date")) %>%
   mutate(frequency = ifelse(is.na(frequency), 0, frequency))%>% # Replace missing values with 0
   arrange(path) # Order by path ID
-# Replace missing values with 0
 
-# Print the first few rows of the completed dataset
-head(complete_df)
+
+complete_df <- complete_df %>%
+  group_by(path) %>%
+  filter(mean(frequency == 0) <= 0.8)
+
+
+
