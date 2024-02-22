@@ -9,9 +9,22 @@ generate_random_paths <- function(g, source_node, nodes, n_paths) {
         # Start from the source node
         path <- random_walk(g, start = source_node, steps = 1, mode = "out")
       } else {
-        # Start from a randomly selected node (excluding the source node)
-        v <- sample(nodes, size = 1)
-        path <- random_walk(g, start = v, steps = 1, mode = "out")
+        # choosing by different probabilities
+        #probabilities <- numeric(length(nodes))
+        ## while using 10000 nodes
+        #probabilities[1:3000] <- 0.8
+        #probabilities[3001:5000] <- 0.1
+        #probabilities[5001:length(nodes)] <- 0.4
+        ## while using 5000 nodes
+        #probabilities[1:1000] <- 0.8
+        #probabilities[1001:3000] <- 0.1
+        #probabilities[3001:length(nodes)] <- 0.4
+        # Normalize the probabilities so that they sum up to 1
+        #probabilities <- probabilities / sum(probabilities)
+        #selected_node <- sample(nodes, size = 1, prob = probabilities)
+        # choosing by same probability
+        selected_node <- sample(nodes, size = 1)
+        path <- random_walk(g, start = selected_node, steps = 1, mode = "out")
       }
     }
     path
@@ -19,8 +32,9 @@ generate_random_paths <- function(g, source_node, nodes, n_paths) {
   random_paths
 }
 
+
 # Create a simple directed graph with one edge between each pair of nodes (no self-loops)
-n <- 100000
+n <- 100000 # or 5000
 nodes <- 1:n
 edges <- data.frame(from = sample(nodes, size = 2*n, replace = TRUE),
                     to = sample(nodes, size = 2*n, replace = TRUE))
