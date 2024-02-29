@@ -34,7 +34,7 @@ generate_random_paths <- function(g, source_node, nodes, n_paths) {
 
 
 # Create a simple directed graph with one edge between each pair of nodes (no self-loops)
-n <- 100000 # or 5000
+n <- 10000 # or 5000
 nodes <- 1:n
 edges <- data.frame(from = sample(nodes, size = 2*n, replace = TRUE),
                     to = sample(nodes, size = 2*n, replace = TRUE))
@@ -62,7 +62,7 @@ dates <- seq(start_date, end_date, by = "month")  # Monthly dates
 path_df_list <- list()
 # Loop over each month
 for (i in seq_along(dates)) {
-  random_paths <- generate_random_paths(g, source_node, 1:max(V(g)), 200000)
+  random_paths <- generate_random_paths(g, source_node, 1:max(V(g)), 20000)
   random_paths_names <- c(names(unlist( random_paths)))
   # Combine elements two by two
   combined_pairs <- paste(random_paths_names[seq(1, length(random_paths_names), by = 2)], random_paths_names[seq(2, length(random_paths_names), by = 2)], sep = "::")
