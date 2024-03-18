@@ -49,7 +49,7 @@ else{
       nrow.in + nrow.out + length(unique(char.after.group))
   }
 }
-#}
+
 # smatrix.network
 smatrix.network <- sparseMatrix(
   i = numeric(0),
@@ -134,7 +134,6 @@ for (prefix in prefixes) {
       smatrix.network[2, ] <- as.vector(do.call(cbind, out.total))
       smatrix.network[3, ] <- as.vector(do.call(cbind, outer))
       }
-####### not changed   
   # IN series
   if(nrow.in > 0){
     # Initialize a sparse matrix
