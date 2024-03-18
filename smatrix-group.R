@@ -20,7 +20,7 @@ smatrix.group <- function(data.network) {
       nrow.in <- nrow.in + 1 
     }
   }
-}
+#}
 if(length(other_cat.t) == length(unique_cat.t)){ ## while flows all come from other node
   if(group.num > 1){
     number.row <- 1 + (group.num*2) + nrow.in + length(unique(char.after.group))
@@ -49,7 +49,7 @@ else{
       nrow.in + nrow.out + length(unique(char.after.group))
   }
 }
-}
+#}
 # smatrix.network
 smatrix.network <- sparseMatrix(
   i = numeric(0),
@@ -66,15 +66,6 @@ df_list <- list()
 for (prefix in prefixes) {
   df_list[[prefix]] <-  data.network[grep(paste0("^", prefix),  data.network$cat), , drop = FALSE]
 }
-
-  if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
-    h <- 1
-    # total IN
-    smatrix.network[1, ] <- 1
-  }  
-  else{
-    # total IN
-    smatrix.network[1, ] <- 1
     # total OUT
     out.total <- list()
     outer <- list()
@@ -84,44 +75,65 @@ for (prefix in prefixes) {
       char.after <- sub(".*::", "", char.after.g)
       unique_cat <- unique(char.after.g)
       other_cat <- unique(char.after.g[char.before == 'other'])
-      ## Total OUT
-      out.total[[length(out.total)+1]] <- c(rep(1, length(unique_cat) - length(other_cat)),
-                                            rep(0, length(other_cat)))
-      ## Total OUTER
-      if (sum(unique(char.before) %in% "other") == 1) {
-      outer[[length(outer)+1]] <- c(rep(0, length(unique_cat) - length(other_cat)),
-                                    rep(1, length(other_cat)))
-      if(group.num > 1)
-        h <- 3 + (group.num*3)
-      else
-        h <- 3
+      
+      if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
+        if(group.num > 1)
+          h <- 1 + (group.num)
+        else
+          h <- 1
+      ## Total IN
+       smatrix.network[1, ] <- 1
       }
       else{
-        if(group.num > 1)
-          h <- 2 + (group.num*2)
-        else
-          h <- 2
+        ## Total IN
+        smatrix.network[1, ] <- 1
+        ## Total OUT
+        out.total[[length(out.total)+1]] <- c(rep(1, length(unique_cat) - length(other_cat)),
+                                              rep(0, length(other_cat)))
+        ## Total OUTER
+        if (sum(unique(char.before) %in% "other") == 1) {
+          outer[[length(outer)+1]] <- c(rep(0, length(unique_cat) - length(other_cat)),
+                                        rep(1, length(other_cat)))
+          if(group.num > 1)
+            h <- 3 + (group.num*3)
+          else
+            h <- 3
+        }
+        else{
+          if(group.num > 1)
+            h <- 2 + (group.num*2)
+          else
+            h <- 2
+        }
       }
 
       if(group.num > 1){
-        ## Group in
-        g.in <- unique(df_list[[k]]$cat)
-        smatrix.network[3 + k, ] <- ifelse(unique(data.network$cat) %in% g.in, 1, 0)
-        ## Group out
-        g.out <- unique(df_list[[k]]$cat)
-        g.out.t <- g.out[!grepl("other::", g.out)]
-        smatrix.network[3 + group.num + k, ] <- ifelse(unique(data.network$cat) %in% g.out.t, 1, 0)
-        ## Group outer
-        g.outer <- unique(df_list[[k]]$cat)
-        g.outer.t <- g.outer[grepl("other::", g.outer)]
-        smatrix.network[3 + (2*group.num) + k, ] <- ifelse(unique(data.network$cat) %in% g.outer.t, 1, 0)
+        if(length(other_cat) == length(unique_cat)){ ## while flows all come from other node
+          ## Group in
+          g.in <- unique(df_list[[k]]$cat)
+          smatrix.network[1 + k, ] <- ifelse(unique(data.network$cat) %in% g.in, 1, 0) 
+        }
+        else{
+          ## Group in
+          g.in <- unique(df_list[[k]]$cat)
+          smatrix.network[3 + k, ] <- ifelse(unique(data.network$cat) %in% g.in, 1, 0)
+          ## Group out
+          g.out <- unique(df_list[[k]]$cat)
+          g.out.t <- g.out[!grepl("other::", g.out)]
+          smatrix.network[3 + group.num + k, ] <- ifelse(unique(data.network$cat) %in% g.out.t, 1, 0)
+          ## Group outer
+          g.outer <- unique(df_list[[k]]$cat)
+          g.outer.t <- g.outer[grepl("other::", g.outer)]
+          smatrix.network[3 + (2*group.num) + k, ] <- ifelse(unique(data.network$cat) %in% g.outer.t, 1, 0)
+        }
       }
 
     }
-    smatrix.network[2, ] <- as.vector(do.call(cbind, out.total))
-    smatrix.network[3, ] <- as.vector(do.call(cbind, outer))
     
-    
+  if(length(other_cat) != length(unique_cat)){ 
+      smatrix.network[2, ] <- as.vector(do.call(cbind, out.total))
+      smatrix.network[3, ] <- as.vector(do.call(cbind, outer))
+      }
 ####### not changed   
   # IN series
   if(nrow.in > 0){
