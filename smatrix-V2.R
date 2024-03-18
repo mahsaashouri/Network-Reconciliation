@@ -62,7 +62,7 @@ smatrix.v2 <- function(data.network) {
       smatrix.network[h, ] <- c(rep(0, ncol(smatrix.network) - length(other_cat)),
                                 rep(1, length(other_cat)))
     } else {
-      h <- 0
+      h <- 2
     }
   }
   
