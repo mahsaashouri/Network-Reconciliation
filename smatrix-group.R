@@ -20,7 +20,6 @@ smatrix.group <- function(data.network) {
       nrow.in <- nrow.in + 1 
     }
   }
-#}
 if(length(other_cat.t) == length(unique_cat.t)){ ## while flows all come from other node
   if(group.num > 1){
     number.row <- 1 + (group.num*2) + nrow.in + length(unique(char.after.group))
@@ -131,8 +130,8 @@ for (prefix in prefixes) {
     }
     
   if(length(other_cat) != length(unique_cat)){ 
-      smatrix.network[2, ] <- as.vector(do.call(cbind, out.total))
-      smatrix.network[3, ] <- as.vector(do.call(cbind, outer))
+      smatrix.network[2, ] <- as.vector(unlist(out.total))
+      smatrix.network[3, ] <- as.vector(unlist(outer))
       }
   # IN series
   if(nrow.in > 0){
