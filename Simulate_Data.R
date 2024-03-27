@@ -2,7 +2,7 @@
 
 library(forecast)
 
-Sample4 <-read.csv("Sample3Most.csv", header = TRUE)[,-1]
+Sample4 <-read.csv("Sample2357Most.csv", header = TRUE)[,-1]
 Sample4_wide1 <- Sample4$freq %>%
   matrix(nrow = 64, ncol = nrow(Sample4)/64) %>%
   as.data.frame() %>%
@@ -27,25 +27,25 @@ sim.sd <- as.vector(apply(sim, 2, function(x) sd(x)))
 set.seed(123)
 noise001 <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
-  noise001[,i] <- arima.sim(model = list(order = c(0, 0, 0)), n =64, sd = 0.01)
+  noise001[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, sd = 0.01)[-1]
 }
 
 set.seed(123)
 noise01 <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
-  noise01[,i] <- arima.sim(model = list(order = c(0, 0, 0)), n =64, sd = 0.1)
+  noise01[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, sd = 0.1)[-1]
 }
 
 set.seed(123)
 noise05 <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
-  noise05[,i] <- arima.sim(model = list(order = c(0, 0, 0)), n =64, sd = 0.5)
+  noise05[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, sd = 0.5)[-1]
 }
 
 set.seed(123)
 noise1 <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
-  noise1[,i] <- arima.sim(model = list(order = c(0, 0, 0)), n =64, sd = 1)
+  noise1[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, sd = 1)[-1]
 }
 
 sim001.scale <- sim.scale + noise001
@@ -71,4 +71,4 @@ colnames(sim1) <- colnames(Sample4_wide1)
 actual.sim.noise.FH <- rbind(cbind(reshape2::melt(sim001), Sim ='sig0.01'), cbind(reshape2::melt(sim01), Sim = 'sig0.1'), 
                              cbind(reshape2::melt(sim05), Sim = 'sig0.5'), cbind(reshape2::melt(sim1), Sim = 'sig1'))
 
-write_csv(actual.sim.noise.FH, 'actual.sim.noise.FH.3Most.n.csv')
+write_csv(actual.sim.noise.FH, 'actual.sim.noise.FH.4Most.n.csv')
