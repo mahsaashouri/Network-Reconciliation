@@ -95,7 +95,7 @@ Aggreg.func.group <- function(data.network){
         reduce(`+`)
       Outer.g <- Matrix(Outer.g, nrow = length(Outer.g), sparse = TRUE)
       colnames(Outer.g) <- paste('Outer.group', k, sep = '.')
-      Matrix.group.outer <- cbind(Matrix.group.outer, TotalOut.g)
+      Matrix.group.outer <- cbind(Matrix.group.outer, Outer.g)
     }
     
   }
