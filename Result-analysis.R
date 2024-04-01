@@ -245,6 +245,24 @@ fc.all <- bind_rows(fc.all %>%
                       filter(Series == 'Outer') %>%
                       mutate (Level = 'Outer'),
                     fc.all %>%
+                      filter(Series == 'In.group.1') %>%
+                      mutate (Level = 'In.group.1'),
+                    fc.all %>%
+                      filter(Series == 'In.group.2') %>%
+                      mutate (Level = 'In.group.2'),
+                    fc.all %>%
+                      filter(Series == 'Out.group.1') %>%
+                      mutate (Level = 'Out.group.1'),
+                    fc.all %>%
+                      filter(Series == 'Out.group.2') %>%
+                      mutate (Level = 'Out.group.2'),
+                    fc.all %>%
+                      filter(Series == 'Outer.group.1') %>%
+                      mutate (Level = 'Outer.group.1'),
+                    fc.all %>%
+                      filter(Series == 'Outer.group.2') %>%
+                      mutate (Level = 'Outer.group.2'),
+                    fc.all %>%
                       filter(grepl('\\.in$', Series) & Series != 'Total.in') %>%
                       mutate (Level = 'Inflow'), 
                     fc.all %>%
@@ -253,7 +271,7 @@ fc.all <- bind_rows(fc.all %>%
                     fc.all %>% filter(!grepl('\\.in$|\\.out$|Outer$', Series)) %>%
                       mutate (Level = 'Bottom level'))
 
-fc.all <- bind_cols(fc.all, 'id' = rep(1:12, nrow(fc.all)/12))
+fc.all <- bind_cols(fc.all, 'id' = rep(1:6, nrow(fc.all)/6))
 
 # Group by Level, rec_unrec, and method, then calculate RMSE
 rmse_results_all <- fc.all %>%
