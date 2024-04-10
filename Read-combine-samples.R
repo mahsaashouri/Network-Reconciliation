@@ -16,7 +16,7 @@ file_list <- lapply(file_names, function(x){
 SampleClick <- rbindlist(file_list)
 
 
-SampleClick <- rbind(SampleClick, click202302)
+#SampleClick <- rbind(SampleClick, click202302)
 ## add up repeated rows
 SampleClick <- SampleClick %>%
   group_by(id, date) %>%
@@ -48,4 +48,38 @@ SampleClick1 <- SampleClick %>%
   filter(mean(freq == 0) <= 0.7)
 
 
-write.csv(SampleClick1, 'SamplePerson.csv')
+write.csv(SampleClick1, 'SampleLOC.csv')
+
+
+## if we need to choose the most frequent articles
+
+# Load necessary libraries
+library(dplyr)
+library(tidyr)
+
+# Extract P1 and P2 
+SampleClick1 <- SampleClick1 %>%
+  mutate(P1_P2 = id) %>%
+  separate(P1_P2, into = c("P1", "P2"), sep = "::") 
+
+# Aggregate frequencies by P1 and P2 separately, then combine results
+top_subjects <- SampleClick1 %>%
+  group_by(subject = P1) %>%
+  summarise(total_freq = sum(freq)) %>%
+  bind_rows(SampleClick1 %>%
+              group_by(subject = P2) %>%
+              summarise(total_freq = sum(freq))) %>%
+  group_by(subject) %>%
+  summarise(total_freq = sum(total_freq)) %>%
+  arrange(desc(total_freq)) %>%
+  head(7)
+
+print(top_subjects)
+top_subjects <- top_subjects[-2, ]
+# Filter dataset based on top repeated pages
+subset_dataset <- SampleClick1 %>%
+  filter(P1 %in% top_subjects$subject | P2 %in% top_subjects$subject)
+
+SampleMost <- subset_dataset[, c(-4,-5)]
+write.csv(SampleMost, 'SampleLOC5Most.csv')
+
