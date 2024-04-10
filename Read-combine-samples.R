@@ -48,7 +48,7 @@ SampleClick1 <- SampleClick %>%
   filter(mean(freq == 0) <= 0.7)
 
 
-write.csv(SampleClick1, 'SampleLOC.csv')
+write.csv(SampleClick1, 'SampleArt.csv')
 
 
 ## if we need to choose the most frequent articles
@@ -72,14 +72,14 @@ top_subjects <- SampleClick1 %>%
   group_by(subject) %>%
   summarise(total_freq = sum(total_freq)) %>%
   arrange(desc(total_freq)) %>%
-  head(7)
+  head(8)
 
 print(top_subjects)
-top_subjects <- top_subjects[-2, ]
+top_subjects <- top_subjects[-c(2,6), ]
 # Filter dataset based on top repeated pages
 subset_dataset <- SampleClick1 %>%
   filter(P1 %in% top_subjects$subject | P2 %in% top_subjects$subject)
 
 SampleMost <- subset_dataset[, c(-4,-5)]
-write.csv(SampleMost, 'SampleLOC5Most.csv')
+write.csv(SampleMost, 'SampleArt5Most.csv')
 
