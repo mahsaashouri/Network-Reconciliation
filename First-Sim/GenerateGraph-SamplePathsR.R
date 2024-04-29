@@ -1,6 +1,6 @@
 
 library(igraph)
-set.seed(123)
+set.seed(154)
 generate_random_paths <- function(g, source_node, nodes, n_paths) {
   random_paths <- lapply(1:n_paths, function(v) {
     path <- NULL
