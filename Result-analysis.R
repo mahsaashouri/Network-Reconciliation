@@ -245,24 +245,6 @@ fc.all <- bind_rows(fc.all %>%
                       filter(Series == 'Outer') %>%
                       mutate (Level = 'Outer'),
                     fc.all %>%
-                      filter(Series == 'In.group.1') %>%
-                      mutate (Level = 'In.group.1'),
-                    fc.all %>%
-                      filter(Series == 'In.group.2') %>%
-                      mutate (Level = 'In.group.2'),
-                    fc.all %>%
-                      filter(Series == 'Out.group.1') %>%
-                      mutate (Level = 'Out.group.1'),
-                    fc.all %>%
-                      filter(Series == 'Out.group.2') %>%
-                      mutate (Level = 'Out.group.2'),
-                    fc.all %>%
-                      filter(Series == 'Outer.group.1') %>%
-                      mutate (Level = 'Outer.group.1'),
-                    fc.all %>%
-                      filter(Series == 'Outer.group.2') %>%
-                      mutate (Level = 'Outer.group.2'),
-                    fc.all %>%
                       filter(grepl('\\.in$', Series) & Series != 'Total.in') %>%
                       mutate (Level = 'Inflow'), 
                     fc.all %>%
@@ -270,6 +252,43 @@ fc.all <- bind_rows(fc.all %>%
                       mutate (Level = 'Outflow'), 
                     fc.all %>% filter(!grepl('\\.in$|\\.out$|Outer$', Series)) %>%
                       mutate (Level = 'Bottom level'))
+
+## If we analysis the generalized (grouped) model
+#fc.all <- bind_rows(fc.all %>%
+#                      filter(Series == 'Total.in') %>%
+#                      mutate (Level = 'Total.in'),
+#                    fc.all %>%
+#                      filter(Series == 'Total.out') %>%
+#                      mutate (Level = 'Total.out'),
+#                    fc.all %>%
+#                      filter(Series == 'Outer') %>%
+#                      mutate (Level = 'Outer'),
+#                    fc.all %>%
+#                      filter(Series == 'In.group.1') %>%
+#                      mutate (Level = 'In.group.1'),
+#                    fc.all %>%
+#                      filter(Series == 'In.group.2') %>%
+#                      mutate (Level = 'In.group.2'),
+#                    fc.all %>%
+#                      filter(Series == 'Out.group.1') %>%
+#                      mutate (Level = 'Out.group.1'),
+#                    fc.all %>%
+#                      filter(Series == 'Out.group.2') %>%
+#                      mutate (Level = 'Out.group.2'),
+#                    fc.all %>%
+#                      filter(Series == 'Outer.group.1') %>%
+#                      mutate (Level = 'Outer.group.1'),
+#                    fc.all %>%
+#                      filter(Series == 'Outer.group.2') %>%
+#                      mutate (Level = 'Outer.group.2'),
+#                    fc.all %>%
+#                      filter(grepl('\\.in$', Series) & Series != 'Total.in') %>%
+#                      mutate (Level = 'Inflow'), 
+#                    fc.all %>%
+#                      filter(grepl('\\.out$', Series) & Series != 'Total.out') %>%
+#                      mutate (Level = 'Outflow'), 
+#                    fc.all %>% filter(!grepl('\\.in$|\\.out$|Outer$|\\.group', Series)) %>%
+#                      mutate (Level = 'Bottom level'))
 
 fc.all <- bind_cols(fc.all, 'id' = rep(1:6, nrow(fc.all)/6))
 
