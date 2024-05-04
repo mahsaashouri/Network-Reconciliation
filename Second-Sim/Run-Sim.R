@@ -6,40 +6,39 @@ library(reshape)
 library(tsibble)
 library(tidyverse)
 library(SparseM)
-source('CHOL.R')
-source('CG.R')
-source('olsfc.pwfc.AIC-BIC2.R')
+source('CG-shrink.R')
+source('olsfc.pwfc.AIC-BIC.R')
 #source('olsfc.R')
 source('smatrix-V2.R')
 source('ngts-V2.R')
 
 
-actual.sim <- readr::read_csv('actual.sim.noise.FH.3Most.n.csv')
+actual.sim <- readr::read_csv('actual.sim.noise.FH.4Most.n.csv')
 ## Choosing series with different added noises (0.01, 0.1, 0.5, 1)
 actual.sim.001 <- actual.sim[actual.sim$Sim == 'sig0.01',]
 actual.sim.01 <- actual.sim[actual.sim$Sim == 'sig0.1',]
 actual.sim.05 <- actual.sim[actual.sim$Sim == 'sig0.5',]
 actual.sim.1 <- actual.sim[actual.sim$Sim == 'sig1',]
 
-data.network <- cbind.data.frame(actual.sim.05$Var2, actual.sim.05$value)
+data.network <- cbind.data.frame(actual.sim.1$Var2, actual.sim.1$value)
 colnames(data.network) <- c('cat', 'series')
 
 ## if needed - in case we have some errors in labels
-#tst <- data.network %>%
-#  group_split(cat)
+tst <- data.network %>%
+  group_split(cat)
 
-#reference_dimensions <- dim(tst[[1]])
-#different_dimensions_indices <- integer(0)
+reference_dimensions <- dim(tst[[1]])
+different_dimensions_indices <- integer(0)
 
-#for (i in seq_along(tst)) {
-#  if (any(as.vector(dim(tst[[i]]))!= as.vector(reference_dimensions))==TRUE) {
-#    different_dimensions_indices <- c(different_dimensions_indices, i)
-#  }
-#}
+for (i in seq_along(tst)) {
+  if (any(as.vector(dim(tst[[i]]))!= as.vector(reference_dimensions))==TRUE) {
+    different_dimensions_indices <- c(different_dimensions_indices, i)
+  }
+}
 
-#tst2 <- tst[-c(different_dimensions_indices)]
+tst2 <- tst[-c(different_dimensions_indices)]
 
-#data.network <- do.call(rbind, tst2)
+data.network <- do.call(rbind, tst2)
 #######
 smatrix.net <- smatrix.v2(data.network = data.network)
 ngts.net <- ts(as.matrix(Aggreg.func.v2(data.network)), frequency = 12, start = c(2017, 11))
@@ -134,7 +133,7 @@ write.csv(t(fc.CG), 'fc.rec.CG.shrink.arima.csv')
 fc.ols <- matrix(NA, nrow = nrow(net.test), ncol = ncol(net.test))
 train.fit <- matrix(NA, nrow = nrow(net.train)-1, ncol = ncol(net.train))
 for(i in seq(NCOL(net.train))){
-  fc.1 <- olsfc.pwfc2(net.train[,i], h, breakpoints = c(5, 15, 25), maxlag = 12, nolag = c(1))
+  fc.1 <- olsfc.pwfc(net.train[,i], h, breakpoints = c(5, 15, 25), maxlag = 12, nolag = c(1))
   fc.ols[,i] <- fc.1[[1]]
   train.fit[,i] <- fc.1[[2]]
 }

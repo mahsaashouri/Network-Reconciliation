@@ -27,25 +27,25 @@ sim.sd <- as.vector(apply(sim, 2, function(x) sd(x)))
 set.seed(123)
 noise001 <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
-  noise001[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, sd = 0.01)[-1]
+  noise001[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, mean = 10, sd = 0.01)[-1]
 }
 
 set.seed(123)
 noise01 <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
-  noise01[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, sd = 0.1)[-1]
+  noise01[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, mean = 10, sd = 0.1)[-1]
 }
 
 set.seed(123)
 noise05 <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
-  noise05[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, sd = 0.5)[-1]
+  noise05[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, mean = 10, sd = 0.5)[-1]
 }
 
 set.seed(123)
 noise1 <- matrix(NA, ncol = ncol(Sample4_wide1), nrow = nrow(Sample4_wide1))
 for(i in 1:ncol(Sample4_wide1)){
-  noise1[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, sd = 1)[-1]
+  noise1[,i] <- arima.sim(model = list(ma = -0.5, order = c(0, 1, 1)), n =64, mean = 10, sd = 1)[-1]
 }
 
 sim001.scale <- sim.scale + noise001
