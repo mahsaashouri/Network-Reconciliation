@@ -24,21 +24,21 @@ data.network <- cbind.data.frame(actual.sim.1$Var2, actual.sim.1$value)
 colnames(data.network) <- c('cat', 'series')
 
 ## if needed - in case we have some errors in labels
-tst <- data.network %>%
-  group_split(cat)
+#tst <- data.network %>%
+#  group_split(cat)
 
-reference_dimensions <- dim(tst[[1]])
-different_dimensions_indices <- integer(0)
+#reference_dimensions <- dim(tst[[1]])
+#different_dimensions_indices <- integer(0)
 
-for (i in seq_along(tst)) {
-  if (any(as.vector(dim(tst[[i]]))!= as.vector(reference_dimensions))==TRUE) {
-    different_dimensions_indices <- c(different_dimensions_indices, i)
-  }
-}
+#for (i in seq_along(tst)) {
+#  if (any(as.vector(dim(tst[[i]]))!= as.vector(reference_dimensions))==TRUE) {
+#    different_dimensions_indices <- c(different_dimensions_indices, i)
+#  }
+#}
 
-tst2 <- tst[-c(different_dimensions_indices)]
+#tst2 <- tst[-c(different_dimensions_indices)]
 
-data.network <- do.call(rbind, tst2)
+#data.network <- do.call(rbind, tst2)
 #######
 smatrix.net <- smatrix.v2(data.network = data.network)
 ngts.net <- ts(as.matrix(Aggreg.func.v2(data.network)), frequency = 12, start = c(2017, 11))
